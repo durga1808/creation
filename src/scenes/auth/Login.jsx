@@ -13,11 +13,13 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { tokens } from "../../theme";
 import { LoginInfo } from "../../global/MockData/LoginMock";
 import { GlobalContext } from "../../global/globalContext/GlobalContext";
-import { getServiceList, loginUser } from "../../api/LoginApiService";
+import { getServiceList, keycloakLoginAuth, loginUser } from "../../api/LoginApiService";
 import Loading from "../../global/Loading/Loading";
 import observai from "../../assets/observai.png";
 import { green } from "@mui/material/colors";
 import { getRealtimeAlertData } from "../../api/AlertApiService";
+import { jwtDecode } from "jwt-decode";
+import { logout } from "../../global/AuthMechanism";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [serviceListData, setServiceListData] = useState([]);
+  const [authenticated, setAuthenticated] = useState(false);
 
   const servicePayload = (serviceData) => {
     serviceData.forEach((item) => {
@@ -157,6 +160,106 @@ const Login = () => {
       setErrorMessage("An error occurred");
     }
   };
+
+  // const getServiceListCall = async (userInfo) => {
+  //   try {
+  //     const serviceData = await getServiceList(userInfo);
+  //     console.log("ServiceList " + JSON.stringify(serviceData));
+  //     if (serviceData.length !== 0) {
+  //       setServiceList(serviceData);
+  //       servicePayload(serviceData);
+  //       fetchAlerts();
+  //       localStorage.setItem("userInfo", JSON.stringify(userInfo));
+  //       // navigate("/mainpage/dashboard");
+  //       // Extract roles from the userInfo
+  //       const userRoles = userInfo.roles;
+
+  //       // Check user roles and navigate accordingly
+  //       if (userRoles.includes("admin")) {
+  //         // If user has the 'admin' role, navigate to admin dashboard
+  //         navigate("/mainpage/dashboard");
+  //       } else if (userRoles.includes("vendor")) {
+  //         // If user has the 'vendor' role, navigate to vendor dashboard
+  //         navigate("/mainpage/apm");
+  //       } else {
+  //         // Default route for other roles
+  //         navigate("/mainpage/dashboard");
+  //       }
+  //     } else {
+  //       setErrorMessage("No Service assigned for this user");
+  //     }
+  //   } catch (error) {
+  //     console.log("error " + error);
+  //     setErrorMessage("An error occurred");
+  //     await logout();
+  //   }
+  // };
+
+  // const handleLogin = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     // Validate input fields
+  //     if (!username || !password) {
+  //       setErrorMessage("Please fill in all fields.");
+  //       setLoading(false);
+  //       return;
+  //     }
+
+  //     // Prepare payload for login
+  //     const payload = {
+  //       username: username,
+  //       password: password,
+  //     };
+
+  //     // Call SSO token provider URL directly
+  //     const userAuth = await keycloakLoginAuth(payload);
+
+  //     if (userAuth.error) {
+  //       // Handle specific error scenarios
+  //       switch (userAuth.error.response?.status) {
+  //         case 401:
+  //           setErrorMessage("Unauthorized. Please check your credentials.");
+  //           break;
+  //         case 404:
+  //           setErrorMessage("Not found. Please try again.");
+  //           break;
+  //         case 403:
+  //           setErrorMessage("Forbidden. Access denied.");
+  //           break;
+  //         default:
+  //           setErrorMessage("Something went wrong. Please try again later.");
+  //           break;
+  //       }
+  //       setLoading(false);
+  //     } else {
+  //       // Successful login
+  //       localStorage.removeItem("loggedOut");
+  //       localStorage.setItem("accessToken", userAuth.data.access_token);
+  //       localStorage.setItem("refreshToken", userAuth.data.refresh_token);
+  //       const decoded = jwtDecode(userAuth.data.access_token);
+  //       localStorage.setItem("roles", JSON.stringify(decoded.realm_access.roles));
+  //       const servicePayload = {
+  //         username: username,
+  //         password: password,
+  //         roles: decoded.realm_access.roles
+  //       };
+  //       // Call service list
+  //       await getServiceListCall(servicePayload);
+  //       setAuthenticated(true);
+
+  //       setLoading(false);
+  //       localStorage.setItem("routeName", "Dashboard");
+  //       setSelected("Dashboard");
+  //       localStorage.setItem("needHistoricalData", false);
+  //     }
+  //   } catch (error) {
+  //     // Handle unexpected errors
+  //     console.error("Login error:", error);
+  //     setErrorMessage("Something went wrong. Please try again later.");
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleLogin = async () => {
     setLoading(true);
