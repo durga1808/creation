@@ -93,11 +93,14 @@ import {
             src={ZagaLogo}
           />
         </div>
-        <div>
-          {" "}
+
+        {/* Login Icon */}
+        <div
+        style={{ marginLeft: "10px" }}>
           <IconButton onClick={handlelogin}>
             <LoginIcon />
           </IconButton>
+        </div>
         </div>
   
         <Box
@@ -123,7 +126,7 @@ import {
                     image={Observai}
                     title="observability"
                   />
-                  <CardContent sx={{ height: "160px" }}>
+                  <CardContent sx={{ height: "168px" }}>
                     <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                       Observability - APM
                     </Typography>
@@ -161,7 +164,7 @@ import {
                     image={Infra}
                     title="observability"
                   />
-                  <CardContent sx={{ height: "160px" }}>
+                  <CardContent sx={{ height: "168px" }}>
                     <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                       Observability - Infra
                     </Typography>
@@ -199,7 +202,7 @@ import {
                     image={Sustainability}
                     title="Sustainability"
                   />
-                  <CardContent sx={{ height: "160px" }}>
+                  <CardContent sx={{ height: "168px" }}>
                     <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                       Sustainability
                     </Typography>
@@ -230,7 +233,7 @@ import {
               <Grid container justifyContent="center">
                 <Card elevation={3}>
                   <CardMedia sx={{ height: 140 }} image={Admin} title="Admin" />
-                  <CardContent sx={{ height: "160px" }}>
+                  <CardContent sx={{ height: "168px" }}>
                     <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                       Admin
                     </Typography>
@@ -258,7 +261,6 @@ import {
             </Grid>
           </Grid>
         </Box>
-      </div>
       </div>
     );
   };
