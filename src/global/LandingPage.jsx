@@ -47,40 +47,40 @@ import {
       navigate(authenticated ? "/mainpage/apm" : "/notAuth");
     }
 
-    const handleAdminDashboard= () => {
-      navigate(authenticated ? "/admin" : "/notAuth");
-    }
-
-    // const handleInfra = () => {
-    //     if (authenticated) {
-    //       // Check if the user has the 'vendor' role
-    //       const userDetails = JSON.parse(localStorage.getItem("userInfo"));
-    //       const isVendor = userDetails && userDetails.roles.includes("admin");
-      
-    //       if (isVendor) {
-    //         // If the user is a vendor, navigate to the Infra page
-    //         navigate("/mainpage/apm");
-    //       } else {
-    //         // If the user is not a vendor, you can show an error message or handle it accordingly
-    //         console.error("Unauthorized access: Vendor access only.");
-    //       }
-    //     } else {
-    //       // If the user is not authenticated, navigate to the login page
-    //       navigate("/login");
-    //     }
-    //   };      
   
-    return (
-      <div style={{ margin: "30px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: "110px",
-          }}
-        >
-          {" "}
+
+  // const handleInfra = () => {
+  //     if (authenticated) {
+  //       // Check if the user has the 'vendor' role
+  //       const userDetails = JSON.parse(localStorage.getItem("userInfo"));
+  //       const isVendor = userDetails && userDetails.roles.includes("admin");
+
+  //       if (isVendor) {
+  //         // If the user is a vendor, navigate to the Infra page
+  //         navigate("/mainpage/apm");
+  //       } else {
+  //         // If the user is not a vendor, you can show an error message or handle it accordingly
+  //         console.error("Unauthorized access: Vendor access only.");
+  //       }
+  //     } else {
+  //       // If the user is not authenticated, navigate to the login page
+  //       navigate("/login");
+  //     }
+  //   };
+
+  return (
+    <div style={{ margin: "30px", display: "flex", flexDirection: "column" }}>
+      {/* Header Section */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: "110px",
+        }}
+      >
+        {/* Zaha Logo */}
+        <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
           <Box
             component="img"
             sx={{
@@ -249,7 +249,7 @@ import {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="info" onClick={handleAdminDashboard}>
+                    <Button size="small" color="info" oncl>
                       Open Admin Dashboard
                     </Button>
                   </CardActions>
@@ -258,6 +258,7 @@ import {
             </Grid>
           </Grid>
         </Box>
+      </div>
       </div>
     );
   };
