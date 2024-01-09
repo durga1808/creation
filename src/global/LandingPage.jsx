@@ -20,39 +20,31 @@ import {
   
   const LandingPage = () => {
     const navigate = useNavigate();
-    // const [authenticated, setAuthenticated] = useState(false);
+    const [authenticated, setAuthenticated] = useState(false);
   
-    // useEffect(() => {
-    //   // Check if the user is authenticated
-    //   const userDetails = localStorage.getItem("userInfo");
+    useEffect(() => {
+      // Check if the user is authenticated
+      const userDetails = localStorage.getItem("userInfo");
   
-    //   if (userDetails) {
-    //     const admin = JSON.parse(userDetails);
-    //     const admincheck = admin.roles && admin.roles.includes("admin");
+      if (userDetails) {
+        const admin = JSON.parse(userDetails);
+        const admincheck = admin.roles && admin.roles.includes("admin");
   
-    //     // Set the authenticated state based on the user's role
-    //     setAuthenticated(admincheck);
-    //   }
-    // }, []);
+        // Set the authenticated state based on the user's role
+        setAuthenticated(admincheck);
+      }
+    }, []);
   
     const handlelogin = () => {
       navigate("/login");
     };
   
-    // const handleobservability = () => {
-    //   navigate(authenticated ? "/mainpage/dashboard" : "/login");
-    // };
-  
-    // const handleInfra = () => {
-    //   navigate(authenticated ? "/mainpage/apm" : "/login");
-    // }
-
     const handleobservability = () => {
-        navigate("/mainpage/dashboard");
-    }
-
+      navigate(authenticated ? "/mainpage/dashboard" : "/notAuth");
+    };
+  
     const handleInfra = () => {
-        navigate("/mainpage/apm");
+      navigate(authenticated ? "/mainpage/apm" : "/notAuth");
     }
 
     // const handleInfra = () => {

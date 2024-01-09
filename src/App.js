@@ -1,7 +1,7 @@
 import SideNavbar from "./global/SideNavbar";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
-import { Route, Routes, useNavigate } from "react-router";
+import { Route, Routes } from "react-router";
 import LoginPage from "./scenes/auth/Login";
 import Topbar from "./global/Topbar";
 import { GlobalContextProvider } from "./global/globalContext/GlobalContext";
@@ -16,13 +16,20 @@ import KafkaSummaryChart from "./scenes/dashboard/summary/KafkaSummaryChart";
 import PodDashboardCharts from "./scenes/dashboard/sustainability/PodDashboardCharts";
 import NodeDashboardCharts from "./scenes/dashboard/sustainability/NodeDashboardCharts";
 import HostDashboardCharts from "./scenes/dashboard/sustainability/HostDashboardCharts";
-import LandingPage from "./global/LandingPage";
 // import { useEffect } from "react";
 // import { isTokenExpired } from "./global/AuthMechanism";
-// import LandingPage from "./global/LandingPage";
+import LandingPage from "./global/LandingPage";
+import PrivateRouter from "./global/PrivateRouter";
+// import { useTokenExpirationCheck } from "./global/TokenExpiry";
 
 function App() {
   const [theme, colorMode] = useMode();
+  // const checkTokenExpiration = useTokenExpirationCheck();
+
+  // useEffect(() => {
+  //   checkTokenExpiration();
+  // }, [checkTokenExpiration]);
+
   // const navigate = useNavigate();
 
   // useEffect(() => {
@@ -32,13 +39,13 @@ function App() {
   //       const isExpired = isTokenExpired(accessToken);
   //       console.log("is EXPIRED---------------------------- " + isExpired);
   //       if (isExpired) {
-  //         navigate("/");
+  //         navigate("/login");
   //       } else {
   //         // Token is valid, continue with the navigation
   //         const isLogout = localStorage.getItem("loggedOut");
   //         console.log("Logout " + isLogout);
   //         if (isLogout === null && window.location.pathname === "/") {
-  //           navigate("/mainpage/dashboard");
+  //           navigate("/");
   //         }
   //       }
   //     }
@@ -109,6 +116,7 @@ function App() {
             {/* <Route path="/dashboard" element={<Dashboard />} /> */}
             {/* Nested routes for /mainpage/* */}
             <Route path="/mainpage/*" element={<MainPage />} />
+            <Route path="/notAuth" element={<PrivateRouter />} />
           </Routes>
           {/* {localStorage.getItem("userInfo") !== null ? (<div className="app">
             <SideNavbar />

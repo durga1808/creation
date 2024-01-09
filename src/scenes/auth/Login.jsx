@@ -143,163 +143,163 @@ const Login = () => {
     }
   };
 
-  const getServiceListCall = async (userInfo) => {
-    try {
-      const serviceData = await getServiceList(userInfo);
-      console.log("ServiceList " + JSON.stringify(serviceData));
-      if (serviceData !== 0) {
-        setServiceList(serviceData);
-        servicePayload(serviceData);
-        fetchAlerts();
-        navigate("/mainpage/apm");
-      } else {
-        setErrorMessage("No Service assigned for this user");
-      }
-    } catch (error) {
-      console.log("error " + error);
-      setErrorMessage("An error occurred");
-    }
-  };
-
   // const getServiceListCall = async (userInfo) => {
   //   try {
   //     const serviceData = await getServiceList(userInfo);
   //     console.log("ServiceList " + JSON.stringify(serviceData));
-  //     if (serviceData.length !== 0) {
+  //     if (serviceData !== 0) {
   //       setServiceList(serviceData);
   //       servicePayload(serviceData);
   //       fetchAlerts();
-  //       localStorage.setItem("userInfo", JSON.stringify(userInfo));
-  //       // navigate("/mainpage/dashboard");
-  //       // Extract roles from the userInfo
-  //       const userRoles = userInfo.roles;
-
-  //       // Check user roles and navigate accordingly
-  //       if (userRoles.includes("admin")) {
-  //         // If user has the 'admin' role, navigate to admin dashboard
-  //         navigate("/mainpage/dashboard");
-  //       } else if (userRoles.includes("vendor")) {
-  //         // If user has the 'vendor' role, navigate to vendor dashboard
-  //         navigate("/mainpage/apm");
-  //       } else {
-  //         // Default route for other roles
-  //         navigate("/mainpage/dashboard");
-  //       }
+  //       navigate("/mainpage/apm");
   //     } else {
   //       setErrorMessage("No Service assigned for this user");
   //     }
   //   } catch (error) {
   //     console.log("error " + error);
   //     setErrorMessage("An error occurred");
-  //     await logout();
   //   }
   // };
 
-  // const handleLogin = async () => {
-  //   try {
-  //     setLoading(true);
+  const getServiceListCall = async (userInfo) => {
+    try {
+      const serviceData = await getServiceList(userInfo);
+      console.log("ServiceList " + JSON.stringify(serviceData));
+      if (serviceData.length !== 0) {
+        setServiceList(serviceData);
+        servicePayload(serviceData);
+        fetchAlerts();
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        navigate("/");
+        // Extract roles from the userInfo
+        // const userRoles = userInfo.roles;
 
-  //     // Validate input fields
-  //     if (!username || !password) {
-  //       setErrorMessage("Please fill in all fields.");
-  //       setLoading(false);
-  //       return;
-  //     }
-
-  //     // Prepare payload for login
-  //     const payload = {
-  //       username: username,
-  //       password: password,
-  //     };
-
-  //     // Call SSO token provider URL directly
-  //     const userAuth = await keycloakLoginAuth(payload);
-
-  //     if (userAuth.error) {
-  //       // Handle specific error scenarios
-  //       switch (userAuth.error.response?.status) {
-  //         case 401:
-  //           setErrorMessage("Unauthorized. Please check your credentials.");
-  //           break;
-  //         case 404:
-  //           setErrorMessage("Not found. Please try again.");
-  //           break;
-  //         case 403:
-  //           setErrorMessage("Forbidden. Access denied.");
-  //           break;
-  //         default:
-  //           setErrorMessage("Something went wrong. Please try again later.");
-  //           break;
-  //       }
-  //       setLoading(false);
-  //     } else {
-  //       // Successful login
-  //       localStorage.removeItem("loggedOut");
-  //       localStorage.setItem("accessToken", userAuth.data.access_token);
-  //       localStorage.setItem("refreshToken", userAuth.data.refresh_token);
-  //       const decoded = jwtDecode(userAuth.data.access_token);
-  //       localStorage.setItem("roles", JSON.stringify(decoded.realm_access.roles));
-  //       const servicePayload = {
-  //         username: username,
-  //         password: password,
-  //         roles: decoded.realm_access.roles
-  //       };
-  //       // Call service list
-  //       await getServiceListCall(servicePayload);
-  //       setAuthenticated(true);
-
-  //       setLoading(false);
-  //       localStorage.setItem("routeName", "Dashboard");
-  //       setSelected("Dashboard");
-  //       localStorage.setItem("needHistoricalData", false);
-  //     }
-  //   } catch (error) {
-  //     // Handle unexpected errors
-  //     console.error("Login error:", error);
-  //     setErrorMessage("Something went wrong. Please try again later.");
-  //     setLoading(false);
-  //   }
-  // };
-
-  const handleLogin = async () => {
-    setLoading(true);
-    localStorage.setItem("routeName", "Dashboard");
-    setSelected("Dashboard");
-    localStorage.setItem("needHistoricalData", false);
-    if (!username || !password) {
-      setErrorMessage("Please fill in all fields.");
-      setLoading(false);
-      return;
-    }
-
-    const payload = {
-      username: username,
-      password: password,
-      // roles: [role],
-    };
-    console.log("Inside setTimeout");
-    const userAuth = await loginUser(payload);
-
-    if (userAuth.status === 200) {
-      console.log("login", username, password, role);
-      localStorage.setItem("userInfo", JSON.stringify(userAuth.data));
-      getServiceListCall(userAuth.data);
-      setLoading(false);
-      console.log(payload);
-    } else if (userAuth.response.status === 401) {
-      setLoading(false);
-      setErrorMessage(userAuth.response.data);
-    } else if (userAuth.response.status === 404) {
-      setLoading(false);
-      setErrorMessage(userAuth.response.data);
-    } else if (userAuth.response.status === 403) {
-      setLoading(false);
-      setErrorMessage(userAuth.response.data);
-    } else {
-      setLoading(false);
-      setErrorMessage("Something went wrong. Please try again later.");
+        // // Check user roles and navigate accordingly
+        // if (userRoles.includes("admin")) {
+        //   // If user has the 'admin' role, navigate to admin dashboard
+        //   navigate("/mainpage/dashboard");
+        // } else if (userRoles.includes("vendor")) {
+        //   // If user has the 'vendor' role, navigate to vendor dashboard
+        //   navigate("/mainpage/apm");
+        // } else {
+        //   // Default route for other roles
+        //   navigate("/mainpage/dashboard");
+        // }
+      } else {
+        setErrorMessage("No Service assigned for this user");
+      }
+    } catch (error) {
+      console.log("error " + error);
+      setErrorMessage("An error occurred");
+      await logout();
     }
   };
+
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+
+      // Validate input fields
+      if (!username || !password) {
+        setErrorMessage("Please fill in all fields.");
+        setLoading(false);
+        return;
+      }
+
+      // Prepare payload for login
+      const payload = {
+        username: username,
+        password: password,
+      };
+
+      // Call SSO token provider URL directly
+      const userAuth = await keycloakLoginAuth(payload);
+
+      if (userAuth.error) {
+        // Handle specific error scenarios
+        switch (userAuth.error.response?.status) {
+          case 401:
+            setErrorMessage("Unauthorized. Please check your credentials.");
+            break;
+          case 404:
+            setErrorMessage("Not found. Please try again.");
+            break;
+          case 403:
+            setErrorMessage("Forbidden. Access denied.");
+            break;
+          default:
+            setErrorMessage("Something went wrong. Please try again later.");
+            break;
+        }
+        setLoading(false);
+      } else {
+        // Successful login
+        localStorage.removeItem("loggedOut");
+        localStorage.setItem("accessToken", userAuth.data.access_token);
+        localStorage.setItem("refreshToken", userAuth.data.refresh_token);
+        const decoded = jwtDecode(userAuth.data.access_token);
+        localStorage.setItem("roles", JSON.stringify(decoded.realm_access.roles));
+        const servicePayload = {
+          username: username,
+          password: password,
+          roles: decoded.realm_access.roles
+        };
+        // Call service list
+        await getServiceListCall(servicePayload);
+        // setAuthenticated(true);
+
+        setLoading(false);
+        localStorage.setItem("routeName", "Dashboard");
+        setSelected("Dashboard");
+        localStorage.setItem("needHistoricalData", false);
+      }
+    } catch (error) {
+      // Handle unexpected errors
+      console.error("Login error:", error);
+      setErrorMessage("Something went wrong. Please try again later.");
+      setLoading(false);
+    }
+  };
+
+  // const handleLogin = async () => {
+  //   setLoading(true);
+  //   localStorage.setItem("routeName", "Dashboard");
+  //   setSelected("Dashboard");
+  //   localStorage.setItem("needHistoricalData", false);
+  //   if (!username || !password) {
+  //     setErrorMessage("Please fill in all fields.");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   const payload = {
+  //     username: username,
+  //     password: password,
+  //     // roles: [role],
+  //   };
+  //   console.log("Inside setTimeout");
+  //   const userAuth = await loginUser(payload);
+
+  //   if (userAuth.status === 200) {
+  //     console.log("login", username, password, role);
+  //     localStorage.setItem("userInfo", JSON.stringify(userAuth.data));
+  //     getServiceListCall(userAuth.data);
+  //     setLoading(false);
+  //     console.log(payload);
+  //   } else if (userAuth.response.status === 401) {
+  //     setLoading(false);
+  //     setErrorMessage(userAuth.response.data);
+  //   } else if (userAuth.response.status === 404) {
+  //     setLoading(false);
+  //     setErrorMessage(userAuth.response.data);
+  //   } else if (userAuth.response.status === 403) {
+  //     setLoading(false);
+  //     setErrorMessage(userAuth.response.data);
+  //   } else {
+  //     setLoading(false);
+  //     setErrorMessage("Something went wrong. Please try again later.");
+  //   }
+  // };
 
   const isiphone = useMediaQuery((theme) => theme.breakpoints.down("iphone"));
 
