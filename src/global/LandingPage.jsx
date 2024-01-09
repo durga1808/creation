@@ -47,6 +47,10 @@ import {
       navigate(authenticated ? "/mainpage/apm" : "/notAuth");
     }
 
+    const handleAdminDashboard= () => {
+      navigate(authenticated ? "/admin" : "/notAuth");
+    }
+
     // const handleInfra = () => {
     //     if (authenticated) {
     //       // Check if the user has the 'vendor' role
@@ -245,7 +249,7 @@ import {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="info">
+                    <Button size="small" color="info" onClick={handleAdminDashboard}>
                       Open Admin Dashboard
                     </Button>
                   </CardActions>
