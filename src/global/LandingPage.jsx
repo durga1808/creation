@@ -1,59 +1,51 @@
 import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Grid,
-  IconButton,
-  Typography,
-} from "@mui/material";
-import Box from "@mui/material/Box";
-import React, { useEffect, useState } from "react";
-import Observai from "../assets/observai.png";
-import Infra from "../assets/Infra.jpeg";
-import Sustainability from "../assets/sustainability.jpeg";
-import Admin from "../assets/admin.jpeg";
-import ZagaLogo from "../assets/zaga-logedit.jpg";
-import LoginIcon from "@mui/icons-material/Login";
-import { useNavigate } from "react-router-dom";
-
-const LandingPage = () => {
-  const navigate = useNavigate();
-  // const [authenticated, setAuthenticated] = useState(false);
-
-  // useEffect(() => {
-  //   // Check if the user is authenticated
-  //   const userDetails = localStorage.getItem("userInfo");
-
-  //   if (userDetails) {
-  //     const admin = JSON.parse(userDetails);
-  //     const admincheck = admin.roles && admin.roles.includes("admin");
-
-  //     // Set the authenticated state based on the user's role
-  //     setAuthenticated(admincheck);
-  //   }
-  // }, []);
-
-  const handlelogin = () => {
-    navigate("/login");
-  };
-
-  // const handleobservability = () => {
-  //   navigate(authenticated ? "/mainpage/dashboard" : "/login");
-  // };
-
-  // const handleInfra = () => {
-  //   navigate(authenticated ? "/mainpage/apm" : "/login");
-  // }
-
-  const handleobservability = () => {
-    navigate("/mainpage/dashboard");
-  };
-
-  const handleInfra = () => {
-    navigate("/mainpage/apm");
-  };
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Grid,
+    IconButton,
+    Typography,
+  } from "@mui/material";
+  import Box from "@mui/material/Box";
+  import React, { useEffect, useState } from "react";
+  import Observai from "../assets/observai.png";
+  import Infra from "../assets/Infra.jpeg";
+  import Sustainability from "../assets/sustainability.jpeg";
+  import Admin from "../assets/admin.jpeg";
+  import ZagaLogo from "../assets/zaga-logedit.jpg";
+  import LoginIcon from "@mui/icons-material/Login";
+  import { useNavigate } from "react-router-dom";
+  
+  const LandingPage = () => {
+    const navigate = useNavigate();
+    const [authenticated, setAuthenticated] = useState(false);
+  
+    useEffect(() => {
+      // Check if the user is authenticated
+      const userDetails = localStorage.getItem("userInfo");
+  
+      if (userDetails) {
+        const admin = JSON.parse(userDetails);
+        const admincheck = admin.roles && admin.roles.includes("admin");
+  
+        // Set the authenticated state based on the user's role
+        setAuthenticated(admincheck);
+      }
+    }, []);
+  
+    const handlelogin = () => {
+      navigate("/login");
+    };
+  
+    const handleobservability = () => {
+      navigate(authenticated ? "/mainpage/dashboard" : "/notAuth");
+    };
+  
+    const handleInfra = () => {
+      navigate(authenticated ? "/mainpage/apm" : "/notAuth");
+    }
 
   // const handleInfra = () => {
   //     if (authenticated) {

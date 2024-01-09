@@ -32,6 +32,7 @@ import { getRealtimeAlertData } from "../api/AlertApiService";
 import { useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { isTokenExpired, logout } from "./AuthMechanism";
+import { useTokenExpirationCheck } from "./TokenExpiry";
 
 function Topbar() {
   const navigate = useNavigate();
@@ -48,6 +49,13 @@ function Topbar() {
   } = useContext(GlobalContext);
   const [anchorEl, setAnchorEl] = useState(null);
 
+  const checkTokenExpiration = useTokenExpirationCheck();
+
+  useEffect(() => {
+    checkTokenExpiration();
+  }, [checkTokenExpiration]);
+
+
   const handleIconClick = (event) => {
     setAnchorEl(event.currentTarget);
     setNotificationCount(0);
@@ -60,49 +68,45 @@ function Topbar() {
   const open = Boolean(anchorEl);
   const id = open ? "notification-popover" : undefined;
 
-  const handleLogout = () => {
-    navigate("/");
-  }
-
     // const handleLogout = () => {
     //   localStorage.setItem("loggedOut",true);
     //   logout();
     //   navigate("/");
     // };
 
-    // const handleLogout = async () => {
-    //   // Check if the token is expired
-    //   const accessToken = localStorage.getItem("accessToken");
-    //   if (accessToken && isTokenExpired(accessToken)) {
-    //     // Token is expired, clear local storage and navigate to the home page
-    //     localStorage.removeItem("accessToken");
-    //     localStorage.removeItem("refreshToken");
-    //     localStorage.removeItem("roles");
-    //     localStorage.removeItem("userInfo");
-    //     navigate("/");
-    //     return;
-    //   }
+    const handleLogout = async () => {
+      // Check if the token is expired
+      const accessToken = localStorage.getItem("accessToken");
+      if (accessToken && isTokenExpired(accessToken)) {
+        // Token is expired, clear local storage and navigate to the home page
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("roles");
+        localStorage.removeItem("userInfo");
+        navigate("/");
+        return;
+      }
   
-    //   // Set a flag to indicate that the user has logged out
-    //   localStorage.setItem("loggedOut", true);
+      // Set a flag to indicate that the user has logged out
+      localStorage.setItem("loggedOut", true);
   
-    //   try {
-    //     // Attempt to call the Keycloak logout API
-    //     await logout();
-    //   } catch (error) {
-    //     // Handle errors from the logout API call
-    //     console.error("Logout request failed:", error);
-    //   }
+      try {
+        // Attempt to call the Keycloak logout API
+        await logout();
+      } catch (error) {
+        // Handle errors from the logout API call
+        console.error("Logout request failed:", error);
+      }
   
-    //   // Clear tokens from localStorage (even if Keycloak logout API fails)
-    //   localStorage.removeItem("accessToken");
-    //   localStorage.removeItem("refreshToken");
-    //   localStorage.removeItem("roles");
-    //   localStorage.removeItem("userInfo");
+      // Clear tokens from localStorage (even if Keycloak logout API fails)
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("roles");
+      localStorage.removeItem("userInfo");
   
-    //   // Navigate to the home page
-    //   navigate("/");
-    // };  
+      // Navigate to the home page
+      navigate("/");
+    };  
 
   const appBarStyles = {
     height: "50px",
