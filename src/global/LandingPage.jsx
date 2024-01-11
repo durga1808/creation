@@ -47,6 +47,10 @@ import {
       navigate(authenticated ? "/mainpage/apm" : "/notAuth");
     }
 
+    const hancleAdminPage = () => {
+      navigate(authenticated ? "/admin" : "/notAuth");
+    }
+
   
 
   // const handleInfra = () => {
@@ -252,7 +256,7 @@ import {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="info" oncl>
+                    <Button size="small" color="info" onClick={hancleAdminPage}>
                       Open Admin Dashboard
                     </Button>
                   </CardActions>
