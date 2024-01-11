@@ -72,3 +72,15 @@ export const getServiceList = async (userInfo) => {
     }
 };
 
+export const addRules = async (addRules) => {
+    try {
+        console.log("api call data", addRules);
+        const response = await axios.post(`${loginURL}/addServiceListNew`, addRules);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error in login User:", error);
+        throw error;
+    }
+}
+

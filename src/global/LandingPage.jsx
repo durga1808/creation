@@ -21,6 +21,12 @@ import {
   const LandingPage = () => {
     const navigate = useNavigate();
     const [authenticated, setAuthenticated] = useState(false);
+
+    console.log("authenticated", authenticated);
+
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    console.log("userInfo", userInfo);
+    
   
     useEffect(() => {
       // Check if the user is authenticated

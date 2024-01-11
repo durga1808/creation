@@ -82,6 +82,7 @@ const GlobalContextProvider = ({ children }) => {
     });
 
     const [searchQuery, setSearchQuery] = useState("");
+    const [userDetails, setUserDetails] = useState(null);
 
     return (
         <GlobalContext.Provider
@@ -207,7 +208,8 @@ const GlobalContextProvider = ({ children }) => {
                 notificationCount,
                 setNotificationCount,
                 alertResponse,
-                setAlertResponse
+                setAlertResponse,
+                userDetails, setUserDetails
             }}
         >
             {children}

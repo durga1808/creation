@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Login.css";
 import {
   Button,
@@ -26,7 +26,7 @@ const Login = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const { setServiceList, setSelected, setNotificationCount, alertResponse, notificationCount, setAlertResponse } = useContext(GlobalContext);
+  const { setServiceList, setSelected, setNotificationCount, alertResponse, notificationCount, setAlertResponse, userDetails, setUserDetails } = useContext(GlobalContext);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +34,6 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [serviceListData, setServiceListData] = useState([]);
-  const [authenticated, setAuthenticated] = useState(false);
 
   const servicePayload = (serviceData) => {
     serviceData.forEach((item) => {
@@ -170,6 +169,7 @@ const Login = () => {
         servicePayload(serviceData);
         fetchAlerts();
         localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        setUserDetails(userInfo);
         navigate("/");
         // Extract roles from the userInfo
         // const userRoles = userInfo.roles;
@@ -185,6 +185,11 @@ const Login = () => {
         //   // Default route for other roles
         //   navigate("/mainpage/dashboard");
         // }
+        console.log("UserDetails---------------", userDetails);
+        console.log("username", userDetails.username)
+        console.log("password", userDetails.password)
+        console.log("userrole", userDetails.roles)
+        console.log("userInfo " + JSON.stringify(userInfo));
       } else {
         setErrorMessage("No Service assigned for this user");
       }
@@ -194,6 +199,10 @@ const Login = () => {
       await logout();
     }
   };
+
+  useEffect(() => {
+    console.log("UserDetails---------------", userDetails);
+  }, [userDetails]);
 
   const handleLogin = async () => {
     try {
@@ -246,7 +255,6 @@ const Login = () => {
         };
         // Call service list
         await getServiceListCall(servicePayload);
-        // setAuthenticated(true);
 
         setLoading(false);
         localStorage.setItem("routeName", "Dashboard");
