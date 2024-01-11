@@ -18,8 +18,8 @@ import Loading from "../../global/Loading/Loading";
 import observai from "../../assets/observai.png";
 import { green } from "@mui/material/colors";
 import { getRealtimeAlertData } from "../../api/AlertApiService";
-import { jwtDecode } from "jwt-decode";
 import { logout } from "../../global/AuthMechanism";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const Login = () => {
   // const processWsData = (wsData) => {
   //   // console.log("output " + wsData);
   //   let metricObj = {};
-  //   let traceObj = {};
+  //   let traceObj = {};jwtDecode
   //   let logObj = {};
   //   if(wsData.alertType === "metric"){
   //     metricObj = {

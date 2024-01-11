@@ -20,6 +20,7 @@ import HostDashboardCharts from "./scenes/dashboard/sustainability/HostDashboard
 // import { isTokenExpired } from "./global/AuthMechanism";
 import LandingPage from "./global/LandingPage";
 import PrivateRouter from "./global/PrivateRouter";
+import AdminMainPage from "./scenes/admin/AdminMainPage";
 // import { useTokenExpirationCheck } from "./global/TokenExpiry";
 
 function App() {
@@ -65,8 +66,8 @@ function App() {
           <Route path="kafkaSummary" element={<KafkaSummaryChart />} />
         </Routes>
       </div>
-    )
-  }
+    );
+  };
 
   const SustainabilitySection = () => {
     return (
@@ -75,8 +76,8 @@ function App() {
         <Route path="node" element={<NodeDashboardCharts />} />
         <Route path="host" element={<HostDashboardCharts />} />
       </Routes>
-    )
-  }
+    );
+  };
 
   const ApmSection = () => {
     return (
@@ -85,8 +86,16 @@ function App() {
         <Route path="metrics" element={<Metrics />} />
         <Route path="logs" element={<Logs />} />
       </Routes>
-    )
-  }
+    );
+  };
+
+  const AdminSection = () => {
+    return (
+      <Routes>
+        <Route index element={<AdminMainPage />} />
+      </Routes>
+    );
+  };
 
   const MainPage = () => {
     return (
@@ -97,7 +106,10 @@ function App() {
           <DashboardTopBar />
           <Routes>
             <Route path="dashboard/*" element={<DashboardSection />} />
-            <Route path="sustainability/*" element={<SustainabilitySection />} />
+            <Route
+              path="sustainability/*"
+              element={<SustainabilitySection />}
+            />
             <Route path="apm/*" element={<ApmSection />} />
           </Routes>
         </main>
@@ -117,6 +129,7 @@ function App() {
             {/* Nested routes for /mainpage/* */}
             <Route path="/mainpage/*" element={<MainPage />} />
             <Route path="/notAuth" element={<PrivateRouter />} />
+            <Route path="/admin" element={<AdminSection />} />
           </Routes>
           {/* {localStorage.getItem("userInfo") !== null ? (<div className="app">
             <SideNavbar />

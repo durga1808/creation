@@ -53,36 +53,40 @@ import {
       navigate(authenticated ? "/mainpage/apm" : "/notAuth");
     }
 
-    // const handleInfra = () => {
-    //     if (authenticated) {
-    //       // Check if the user has the 'vendor' role
-    //       const userDetails = JSON.parse(localStorage.getItem("userInfo"));
-    //       const isVendor = userDetails && userDetails.roles.includes("admin");
-      
-    //       if (isVendor) {
-    //         // If the user is a vendor, navigate to the Infra page
-    //         navigate("/mainpage/apm");
-    //       } else {
-    //         // If the user is not a vendor, you can show an error message or handle it accordingly
-    //         console.error("Unauthorized access: Vendor access only.");
-    //       }
-    //     } else {
-    //       // If the user is not authenticated, navigate to the login page
-    //       navigate("/login");
-    //     }
-    //   };      
   
-    return (
-      <div style={{ margin: "30px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: "110px",
-          }}
-        >
-          {" "}
+
+  // const handleInfra = () => {
+  //     if (authenticated) {
+  //       // Check if the user has the 'vendor' role
+  //       const userDetails = JSON.parse(localStorage.getItem("userInfo"));
+  //       const isVendor = userDetails && userDetails.roles.includes("admin");
+
+  //       if (isVendor) {
+  //         // If the user is a vendor, navigate to the Infra page
+  //         navigate("/mainpage/apm");
+  //       } else {
+  //         // If the user is not a vendor, you can show an error message or handle it accordingly
+  //         console.error("Unauthorized access: Vendor access only.");
+  //       }
+  //     } else {
+  //       // If the user is not authenticated, navigate to the login page
+  //       navigate("/login");
+  //     }
+  //   };
+
+  return (
+    <div style={{ margin: "30px", display: "flex", flexDirection: "column" }}>
+      {/* Header Section */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: "110px",
+        }}
+      >
+        {/* Zaha Logo */}
+        <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
           <Box
             component="img"
             sx={{
@@ -95,11 +99,14 @@ import {
             src={ZagaLogo}
           />
         </div>
-        <div>
-          {" "}
+
+        {/* Login Icon */}
+        <div
+        style={{ marginLeft: "10px" }}>
           <IconButton onClick={handlelogin}>
             <LoginIcon />
           </IconButton>
+        </div>
         </div>
   
         <Box
@@ -125,7 +132,7 @@ import {
                     image={Observai}
                     title="observability"
                   />
-                  <CardContent sx={{ height: "160px" }}>
+                  <CardContent sx={{ height: "168px" }}>
                     <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                       Observability - APM
                     </Typography>
@@ -163,7 +170,7 @@ import {
                     image={Infra}
                     title="observability"
                   />
-                  <CardContent sx={{ height: "160px" }}>
+                  <CardContent sx={{ height: "168px" }}>
                     <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                       Observability - Infra
                     </Typography>
@@ -201,7 +208,7 @@ import {
                     image={Sustainability}
                     title="Sustainability"
                   />
-                  <CardContent sx={{ height: "160px" }}>
+                  <CardContent sx={{ height: "168px" }}>
                     <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                       Sustainability
                     </Typography>
@@ -232,7 +239,7 @@ import {
               <Grid container justifyContent="center">
                 <Card elevation={3}>
                   <CardMedia sx={{ height: 140 }} image={Admin} title="Admin" />
-                  <CardContent sx={{ height: "160px" }}>
+                  <CardContent sx={{ height: "168px" }}>
                     <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                       Admin
                     </Typography>
@@ -251,7 +258,7 @@ import {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="info">
+                    <Button size="small" color="info" oncl>
                       Open Admin Dashboard
                     </Button>
                   </CardActions>
