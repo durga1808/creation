@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Login.css";
 import {
   Button,
@@ -26,18 +26,17 @@ const Login = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const { setServiceList, setSelected, setNotificationCount, alertResponse, notificationCount, setAlertResponse,
+  const { serviceListData, setServiceListData, setServiceList, setSelected, setNotificationCount, alertResponse, notificationCount, setAlertResponse,
     username,setUsername,password,setPassword ,keycloackroles,
     setKeyClockRoles
-  } = useContext(GlobalContext);
+ , userDetails, setUserDetails } = useContext(GlobalContext);
 
   // const [username, setUsername] = useState("");
   // const [password, setPassword] = useState("");
   const [role, setRole] = useState("none");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [serviceListData, setServiceListData] = useState([]);
-  const [authenticated, setAuthenticated] = useState(false);
+  // const [serviceListData, setServiceListData] = useState([]);
 
   const servicePayload = (serviceData) => {
     serviceData.forEach((item) => {
@@ -173,6 +172,7 @@ const Login = () => {
         servicePayload(serviceData);
         fetchAlerts();
         localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        setUserDetails(userInfo);
         navigate("/");
         console.log("userInfo",userInfo.roles);
         // setKeyClockRoles(userInfo.roles)
@@ -191,6 +191,12 @@ const Login = () => {
         //   // Default route for other roles
         //   navigate("/mainpage/dashboard");
         // }
+        console.log("UserDetails---------------", userDetails);
+        console.log("username", userDetails.username)
+        console.log("password", userDetails.password)
+        console.log("userrole", userDetails.roles)
+        console.log("userInfo " + JSON.stringify(userInfo));
+        console.log("serviceData " + serviceListData);
       } else {
         setErrorMessage("No Service assigned for this user");
       }
@@ -200,6 +206,10 @@ const Login = () => {
       await logout();
     }
   };
+
+  useEffect(() => {
+    console.log("UserDetails---------------", userDetails);
+  }, [userDetails]);
 
   const handleLogin = async () => {
     try {
@@ -254,7 +264,6 @@ console.log("password",password);
         };
         // Call service list
         await getServiceListCall(servicePayload);
-        // setAuthenticated(true);
 
         setLoading(false);
         localStorage.setItem("routeName", "Dashboard");

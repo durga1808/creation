@@ -23,6 +23,7 @@ import PrivateRouter from "./global/PrivateRouter";
 import AdminMainPage from "./scenes/admin/AdminMainPage";
 import AddCluster from "./scenes/admin/AddCluster";
 import ClusterInfo from "./scenes/admin/ClusterInfo";
+import AddRules from "./scenes/admin/AddRules";
 // import { useTokenExpirationCheck } from "./global/TokenExpiry";
 
 function App() {
@@ -95,7 +96,8 @@ function App() {
     return (
       <Routes>
         <Route index element={<AdminMainPage />} />
-        <Route path="addcluster" element={<AddCluster/>}/>
+        <Route path="addCluster" element={<AddCluster/>} />
+        <Route path="addRules" element={<AddRules />} />
         <Route path="clusterinfo" element={<ClusterInfo/>}/>
       </Routes>
     );

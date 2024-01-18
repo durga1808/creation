@@ -21,6 +21,12 @@ import {
   const LandingPage = () => {
     const navigate = useNavigate();
     const [authenticated, setAuthenticated] = useState(false);
+
+    console.log("authenticated", authenticated);
+
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    console.log("userInfo", userInfo);
+    
   
     useEffect(() => {
       // Check if the user is authenticated
@@ -47,7 +53,7 @@ import {
       navigate(authenticated ? "/mainpage/apm" : "/notAuth");
     }
 
-    const hancleAdminPage = () => {
+    const handleAdminPage = () => {
       navigate(authenticated ? "/admin" : "/notAuth");
     }
 
@@ -256,7 +262,7 @@ import {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="info" onClick={hancleAdminPage}>
+                    <Button size="small" color="info" onClick={handleAdminPage}>
                       Open Admin Dashboard
                     </Button>
                   </CardActions>

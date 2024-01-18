@@ -55,8 +55,12 @@ const AdminTopBar = () => {
   }, [editableRowId]);
 
   const handleAddCluster = () => {
-    navigate("addcluster");
+    navigate("addCluster");
   };
+
+  const handleAddRules = () => {
+    navigate("addRules")
+  }
 
   const handleEditRow = (
     rowId,
@@ -132,6 +136,7 @@ const AdminTopBar = () => {
             Cluster
           </Typography>
           <Button
+            onClick={handleAddRules}
             sx={{
               backgroundColor: "gray",
               marginRight: "20px",

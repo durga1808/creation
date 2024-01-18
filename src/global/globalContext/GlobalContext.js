@@ -86,6 +86,8 @@ const GlobalContextProvider = ({ children }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [keycloackroles, setKeyClockRoles] = useState([]);
+    const [userDetails, setUserDetails] = useState(null);
+    const [serviceListData, setServiceListData] = useState([]);
 
   return (
     <GlobalContext.Provider
@@ -212,6 +214,7 @@ const GlobalContextProvider = ({ children }) => {
         setNotificationCount,
         alertResponse,
         setAlertResponse,
+                userDetails, setUserDetails, serviceListData, setServiceListData,
         username,
         setUsername,
         password,
