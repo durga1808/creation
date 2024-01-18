@@ -26,10 +26,13 @@ const Login = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const { serviceListData, setServiceListData, setServiceList, setSelected, setNotificationCount, alertResponse, notificationCount, setAlertResponse, userDetails, setUserDetails } = useContext(GlobalContext);
+  const { serviceListData, setServiceListData, setServiceList, setSelected, setNotificationCount, alertResponse, notificationCount, setAlertResponse,
+    username,setUsername,password,setPassword ,keycloackroles,
+    setKeyClockRoles
+ , userDetails, setUserDetails } = useContext(GlobalContext);
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  // const [username, setUsername] = useState("");
+  // const [password, setPassword] = useState("");
   const [role, setRole] = useState("none");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -171,6 +174,9 @@ const Login = () => {
         localStorage.setItem("userInfo", JSON.stringify(userInfo));
         setUserDetails(userInfo);
         navigate("/");
+        console.log("userInfo",userInfo.roles);
+        // setKeyClockRoles(userInfo.roles)
+        console.log("keycloackroles",keycloackroles);
         // Extract roles from the userInfo
         // const userRoles = userInfo.roles;
 
@@ -221,9 +227,11 @@ const Login = () => {
         username: username,
         password: password,
       };
-
+console.log("username",username);
+console.log("password",password);
       // Call SSO token provider URL directly
       const userAuth = await keycloakLoginAuth(payload);
+      console.log("userAuth",userAuth);
 
       if (userAuth.error) {
         // Handle specific error scenarios

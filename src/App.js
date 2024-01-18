@@ -21,6 +21,7 @@ import HostDashboardCharts from "./scenes/dashboard/sustainability/HostDashboard
 import LandingPage from "./global/LandingPage";
 import PrivateRouter from "./global/PrivateRouter";
 import AdminMainPage from "./scenes/admin/AdminMainPage";
+import AddCluster from "./scenes/admin/AddCluster";
 // import { useTokenExpirationCheck } from "./global/TokenExpiry";
 
 function App() {
@@ -93,6 +94,7 @@ function App() {
     return (
       <Routes>
         <Route index element={<AdminMainPage />} />
+        <Route path="addcluster" element={<AddCluster/>}/>
       </Routes>
     );
   };
@@ -129,7 +131,7 @@ function App() {
             {/* Nested routes for /mainpage/* */}
             <Route path="/mainpage/*" element={<MainPage />} />
             <Route path="/notAuth" element={<PrivateRouter />} />
-            <Route path="/admin" element={<AdminSection />} />
+            <Route path="/admin/*" element={<AdminSection />} />
           </Routes>
           {/* {localStorage.getItem("userInfo") !== null ? (<div className="app">
             <SideNavbar />

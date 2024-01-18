@@ -3,7 +3,7 @@ import axios from 'axios';
 const loginURL = process.env.REACT_APP_APIURL_AUTH;
 const CLIENT_SECRET = process.env.REACT_APP_APIURL_CLIENT_SECRET
 const SSO_BASE_URL = process.env.REACT_APP_APIURL_SSO;
-const CLIENT_ID = "React-auth";
+const CLIENT_ID = "react-auth";
 const GRANT_TYPE = "password";
 
 export const keycloakLoginAuth = async (userAuth) => {
@@ -72,15 +72,42 @@ export const getServiceList = async (userInfo) => {
     }
 };
 
-export const addRulesForService = async (addRules) => {
-    try {
-        console.log("api call data", addRules);
-        const response = await axios.post(`${loginURL}/addServiceListNew`, addRules);
-        return response.data;
-    }
-    catch (error) {
-        console.error("Error in login User:", error);
-        throw error;
-    }
-}
+export const addClusterDetails = async (Cluster) => {
+  try {
+    console.log("cluster api data", JSON.stringify(Cluster));
+    // const data=JSON.stringify(Cluster);
+    const response = await axios.post(`${loginURL}/register`, Cluster);
 
+    return response.data;
+  } catch (error) {
+    console.error("Error in add Cluster User:", error);
+    throw error;
+  }
+};
+
+
+export const updateClusterDetails = async (UpdatedClusterData) => {
+  try {
+    console.log("updatedcluster api data", JSON.stringify(UpdatedClusterData));
+    // const data=JSON.stringify(Cluster);
+    const response = await axios.put(`${loginURL}/clusterDataUpdate`, UpdatedClusterData);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error in add Cluster User:", error);
+    throw error;
+  }
+};
+
+
+export const getClusterDetails = async () => {
+  try {
+    const response = await axios.get(`${loginURL}/register`);
+
+    console.log("response", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error in get cluster User:", error);
+    throw error;
+  }
+};
