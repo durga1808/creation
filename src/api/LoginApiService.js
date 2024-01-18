@@ -106,7 +106,7 @@ export const updateClusterDetails = async (UpdatedClusterData) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error in add Cluster User:", error);
+    console.error("Error in update Cluster User:", error);
     throw error;
   }
 };

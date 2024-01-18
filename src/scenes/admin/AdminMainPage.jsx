@@ -25,8 +25,6 @@ const AdminTopBar = () => {
   const [editedClusterType, setEditedClusterType] = useState("");
   const [editedHostURL, setEditedHostURL] = useState("");
 
- 
-
   useEffect(() => {
     const userDetails = JSON.parse(localStorage.getItem("userInfo"));
     const payload = {
@@ -51,11 +49,13 @@ const AdminTopBar = () => {
     fetchData();
   }, [editableRowId]);
 
-
-
   const handleAddCluster = () => {
-    navigate("addcluster");
+    navigate("addCluster");
   };
+
+  const handleAddRules = () => {
+    navigate("addRules")
+  }
 
   const handleEditRow = (
     rowId,
@@ -114,6 +114,7 @@ const AdminTopBar = () => {
             Cluster
           </Typography>
           <Button
+            onClick={handleAddRules}
             sx={{
               backgroundColor: "gray",
               marginRight: "20px",

@@ -8,7 +8,7 @@ import { tokens } from '../../theme';
 import { format, parseISO } from 'date-fns';
 import { addRulesForService } from '../../api/LoginApiService';
 
-const RulesAdd = () => {
+const AddRules = () => {
   const {serviceListData, userDetails} = useContext(GlobalContext);
   const [selectedService, setSelectedService] = useState("");
   const [memoryConstraint, setMemoryConstraint] = useState("");
@@ -82,10 +82,10 @@ const RulesAdd = () => {
     }
   } 
 
-  const handleSelectedServiceChange = (event) => {
-    console.log('Selected service:', event.target.value);
-    setSelectedService(event.target.value);
-  }
+  // const handleSelectedServiceChange = (event) => {
+  //   console.log('Selected service:', event.target.value);
+  //   setSelectedService(event.target.value);
+  // }
 
   const handleStartDateChange = (date) => {
     const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ss");
@@ -272,7 +272,8 @@ const RulesAdd = () => {
               </label>
               <Select
                 value={selectedService}
-                onChange={handleSelectedServiceChange}
+                // onChange={handleSelectedServiceChange}
+                onChange={(e) => setSelectedService(e.target.value)}
                 style={{ width: "150px", marginBottom: '10px' }}
               >
                 <MenuItem value="" disabled>Select a service</MenuItem>
@@ -391,4 +392,4 @@ const RulesAdd = () => {
   )
 }
 
-export default RulesAdd
+export default AddRules
