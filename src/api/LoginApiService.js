@@ -5,6 +5,7 @@ const CLIENT_SECRET = process.env.REACT_APP_APIURL_CLIENT_SECRET;
 const SSO_BASE_URL = process.env.REACT_APP_APIURL_SSO;
 const CLIENT_ID = "React-auth";
 const GRANT_TYPE = "password";
+const openshiftLoginURL = process.env.REACT_APP_APIURL_OPENSHIFT
 
 export const keycloakLoginAuth = async (userAuth) => {
   const data = new URLSearchParams();
@@ -66,7 +67,7 @@ export const getServiceList = async (userInfo) => {
     const response = await axios.post(`${loginURL}/getServiceList`, userInfo);
     return response.data;
   } catch (error) {
-    console.error("Error in login User:", error);
+    console.error("Error in getServiceList:", error);
     throw error;
   }
 };
@@ -77,7 +78,7 @@ export const addClusterDetails = async (Cluster) => {
     // const data=JSON.stringify(Cluster);
     const response = await axios.post(`${loginURL}/register`, Cluster);
 
-    return response.data;
+    return response.data; 
   } catch (error) {
     console.error("Error in add Cluster User:", error);
     throw error;
@@ -107,6 +108,21 @@ export const getClusterDetails = async () => {
     return response.data;
   } catch (error) {
     console.error("Error in get cluster User:", error);
+    throw error;
+  }
+};
+
+export const openshiftClusterLogin = async (clusterUrl,password,username) => {
+  try {
+
+    console.log("clusterUrl",clusterUrl);
+    const response = await axios.get(`${openshiftLoginURL}?clusterUrl=${clusterUrl}&password=${password}&username=${username}`);
+
+    console.log("response", response);
+   
+    return response.data;
+  } catch (error) {
+    console.error("Error in get openshiftClusterLogin User:", error);
     throw error;
   }
 };
