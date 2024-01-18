@@ -72,7 +72,7 @@ export const getServiceList = async (userInfo) => {
     }
 };
 
-export const addRules = async (addRules) => {
+export const addRulesForService = async (addRules) => {
     try {
         console.log("api call data", addRules);
         const response = await axios.post(`${loginURL}/addServiceListNew`, addRules);

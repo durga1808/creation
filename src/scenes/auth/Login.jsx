@@ -26,14 +26,14 @@ const Login = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const { setServiceList, setSelected, setNotificationCount, alertResponse, notificationCount, setAlertResponse, userDetails, setUserDetails } = useContext(GlobalContext);
+  const { serviceListData, setServiceListData, setServiceList, setSelected, setNotificationCount, alertResponse, notificationCount, setAlertResponse, userDetails, setUserDetails } = useContext(GlobalContext);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("none");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [serviceListData, setServiceListData] = useState([]);
+  // const [serviceListData, setServiceListData] = useState([]);
 
   const servicePayload = (serviceData) => {
     serviceData.forEach((item) => {
@@ -190,6 +190,7 @@ const Login = () => {
         console.log("password", userDetails.password)
         console.log("userrole", userDetails.roles)
         console.log("userInfo " + JSON.stringify(userInfo));
+        console.log("serviceData " + serviceListData);
       } else {
         setErrorMessage("No Service assigned for this user");
       }
