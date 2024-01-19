@@ -13,7 +13,12 @@ import {
   Paper,
   TextField,
 } from "@mui/material";
-import { getClusterDetails, loginUser, updateClusterDetails } from "../../api/LoginApiService";
+import {
+  getClusterDetails,
+  loginUser,
+  openshiftClusterLogin,
+  updateClusterDetails,
+} from "../../api/LoginApiService";
 import { useNavigate } from "react-router-dom";
 
 const AdminTopBar = () => {
@@ -21,7 +26,7 @@ const AdminTopBar = () => {
   const [ClusterData, setClusterData] = useState([]);
   const [editableRowId, setEditableRowId] = useState(null);
   const [editedUserName, setEditedUserName] = useState("");
-  const [editedPassword,setEditedPassword] = useState('');
+  const [editedPassword, setEditedPassword] = useState("");
   const [editedClusterType, setEditedClusterType] = useState("");
   const [editedHostURL, setEditedHostURL] = useState("");
 
@@ -71,26 +76,26 @@ const AdminTopBar = () => {
     setEditedHostURL(currentHostURL);
   };
 
-  const handleSaveRow = async() => {
+  const handleSaveRow = async () => {
     // Implement logic to save the edited row data
-    const userDetails =JSON.parse(localStorage.getItem("userInfo")) ;
+    const userDetails = JSON.parse(localStorage.getItem("userInfo"));
 
-    const updatedClusterPayload=   {
-      username:userDetails.username,
-      password:userDetails.password,
-      roles:userDetails.roles,
+    const updatedClusterPayload = {
+      username: userDetails.username,
+      password: userDetails.password,
+      roles: userDetails.roles,
       environments: [
         {
-          clusterId:editableRowId,
+          clusterId: editableRowId,
           clusterUsername: editedUserName,
           clusterPassword: editedPassword,
           hostUrl: editedHostURL,
-          clusterType: editedClusterType
-        }
-      ]
-    }
+          clusterType: editedClusterType,
+        },
+      ],
+    };
 
-    console.log("edited Row Details",updatedClusterPayload);
+    console.log("edited Row Details", updatedClusterPayload);
     await updateClusterDetails(updatedClusterPayload);
     setEditableRowId(null);
   };
@@ -99,6 +104,23 @@ const AdminTopBar = () => {
     username: "mariselvam",
     password: "Selvam@3799",
   };
+
+  const handleClusterOpen = async (clusterUrl,password,username)=>{
+    const ClusterLoginInfo = await openshiftClusterLogin(clusterUrl,password,username);
+    console.log("infooo",ClusterLoginInfo);
+    if(ClusterLoginInfo==="Login successful!"){
+      navigate('clusterinfo')
+      // 
+      setTimeout(() => {
+        alert("Login Successfull !!!")
+      }, 1000);
+    }else{
+      alert("Please verify your credentials and try again.")
+    }
+   
+
+  
+  }
 
   // 091365
 
@@ -169,7 +191,7 @@ const AdminTopBar = () => {
                     row.clusterUsername
                   )}
                 </TableCell>
-                 <TableCell align="center">
+                <TableCell align="center">
                   {editableRowId === row.clusterId ? (
                     <TextField
                       type="text"
@@ -177,10 +199,9 @@ const AdminTopBar = () => {
                       onChange={(e) => setEditedPassword(e.target.value)}
                     />
                   ) : (
-                    '*'.repeat(row.clusterPassword.length)
+                    "*".repeat(row.clusterPassword.length)
                   )}
                 </TableCell>
-
 
                 <TableCell align="center">
                   {editableRowId === row.clusterId ? (
@@ -204,29 +225,62 @@ const AdminTopBar = () => {
                 </TableCell>
                 <TableCell align="center">
                   {editableRowId === row.clusterId ? (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleSaveRow}
-                    >
-                      Save
-                    </Button>
+                    <>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          handleEditRow(
+                            row.clusterId,
+                            row.clusterUsername,
+                            row.clusterPassword,
+                            row.clusterType,
+                            row.hostUrl
+                          )
+                        }
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        sx={{ marginLeft: "10px" }}
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSaveRow}
+                      >
+                        Save
+                      </Button>
+                    </>
                   ) : (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() =>
-                        handleEditRow(
-                          row.clusterId,
-                          row.clusterUsername,
-                          row.clusterPassword,
-                          row.clusterType,
-                          row.hostUrl
-                        )
-                      }
-                    >
-                      Edit
-                    </Button>
+                    <>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          handleClusterOpen(row.hostUrl,
+                            row.clusterPassword,
+                            row.clusterUsername)
+                          // openshiftClusterLogin
+                        }
+                      >
+                        Open
+                      </Button>
+                      <Button
+                        sx={{ marginLeft: "10px" }}
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          handleEditRow(
+                            row.clusterId,
+                            row.clusterUsername,
+                            row.clusterPassword,
+                            row.clusterType,
+                            row.hostUrl
+                          )
+                        }
+                      >
+                        Edit
+                      </Button>
+                    </>
                   )}
                 </TableCell>
               </TableRow>
