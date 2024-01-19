@@ -10,26 +10,26 @@ import { addRulesForService } from '../../api/LoginApiService';
 
 const AddRules = () => {
   const {serviceListData, userDetails} = useContext(GlobalContext);
-  const [selectedService, setSelectedService] = useState("");
+  const [selectedService, setSelectedService] = useState(serviceListData[0] || "");
   const [memoryConstraint, setMemoryConstraint] = useState("");
   const [expiryDateTime, setExpiryDateTime] = useState(new Date());
   const [duration, setDuration] = useState(0);
   const [cpuLimit, setCpuLimit] = useState(0.0);
   const [memoryLimit, setMemoryLimit] = useState(0);
-  const [ruleType, setRuleType] = useState('');
+  const [ruleType, setRuleType] = useState("trace");
   const [startDateTime, setStartDateTime] = useState(new Date());
   const [cpuConstraint, setCpuConstraint] = useState('');
   const [durationConstraint, setDurationConstraint] = useState('');
-  const [severityText, setSeverityText] = useState('');
+  const [severityText, setSeverityText] = useState("");
   const [severityConstraint, setSeverityConstraint] = useState('');
   // const [maxEndDate, setMaxEndDate] = useState(false);
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const isipadpro = useMediaQuery((theme) =>
-  theme.breakpoints.only("isipadpro")
-);
+//   const isipadpro = useMediaQuery((theme) =>
+//   theme.breakpoints.only("isipadpro")
+// );
 
   console.log('serviceListData:', serviceListData);
   console.log('userDetails:', userDetails);
@@ -37,6 +37,7 @@ const AddRules = () => {
   console.log("User Details", localStorage.getItem("userInfo"))
 
   const ruleTypeList = ['trace', 'metric', 'log']
+  const severityChanges = ['Error', 'Severe', 'Warn', 'Info']
 
   useEffect(() => {
     console.log("useeffect called------------");
@@ -112,7 +113,7 @@ const AddRules = () => {
   return (
     <div>
       <Container component="main" maxWidth="xs" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-        <Paper elevation={3} sx={{ padding: 4, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',height: "90vh", width: "500px" }}>
+        <Paper elevation={3} sx={{ padding: 4, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center',height: "90vh", width: "600px" }}>
           <Typography variant="h5" gutterBottom sx={{fontWeight:"bold"}}>
             Add Rules
           </Typography>
@@ -127,16 +128,17 @@ const AddRules = () => {
           >
             <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", marginBottom: "5px" }}>
                 <div
-                  style={{
-                    alignItems: "center",
-                    marginBottom: "10px",
-                    marginRight: "10px",
-                  }}
+                  // style={{
+                  //   alignItems: "center",
+                  //   marginBottom: "10px",
+                  //   marginRight: "10px",
+                  // }}
                 >
                   <label
                     style={{
                       fontSize: "12px",
-                      marginBottom: "5px",
+                      // marginBottom: "4px",
+                      marginLeft: "10px",
                       color: colors.tabColor[100],
                     }}
                   >
@@ -157,56 +159,57 @@ const AddRules = () => {
                       <DateTimePicker
                         value={startDateTime}
                         onChange={handleStartDateChange}
-                        slotProps={{
-                          textField: { variant: "standard" },
-                        }}
+                        // slotProps={{
+                        //   textField: { variant: "standard" },
+                        // }}
                         disableFuture
-                        sx={{
-                          width: isipadpro ? 130 : 153,
-                          marginRight: 2,
-                          backgroundColor:
-                            theme.palette.mode === "dark" ? "#848482" : "#FFF",
+                        // sx={{
+                        //   width: isipadpro ? 130 : 153,
+                        //   marginRight: 2,
+                        //   backgroundColor:
+                        //     theme.palette.mode === "dark" ? "#848482" : "#FFF",
 
-                          "& .MuiInput-underline:before": {
-                            borderBottom: "none", // Remove the default underline
-                          },
+                        //   "& .MuiInput-underline:before": {
+                        //     borderBottom: "none", // Remove the default underline
+                        //   },
 
-                          "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
-                            borderBottom: "none",
-                          },
+                        //   "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+                        //     borderBottom: "none",
+                        //   },
 
-                          padding: "7px",
-                          "& .MuiInputBase-input": {
-                            padding: 0,
-                            "&:hover": {
-                              border: "none", // Remove hover border effect
-                            },
-                          },
-                          "& .MuiInputBase-root": {
-                            "&:hover": {
-                              border: "none", // Remove hover border effect
-                            },
-                          },
-                          "& .MuiSvgIcon-root": {
-                            fontSize: 18, // Adjust the font size of the clearable icon
-                          },
-                        }}
+                        //   padding: "7px",
+                        //   "& .MuiInputBase-input": {
+                        //     padding: 0,
+                        //     "&:hover": {
+                        //       border: "none", // Remove hover border effect
+                        //     },
+                        //   },
+                        //   "& .MuiInputBase-root": {
+                        //     "&:hover": {
+                        //       border: "none", // Remove hover border effect
+                        //     },
+                        //   },
+                        //   "& .MuiSvgIcon-root": {
+                        //     fontSize: 18, // Adjust the font size of the clearable icon
+                        //   },
+                        // }}
                       />
                     </Box>
                   </LocalizationProvider>
                 </div>
 
                 <div
-                  style={{
-                    alignItems: "center",
-                    marginBottom: "10px",
-                    marginRight: "10px",
-                  }}
+                  // style={{
+                  //   alignItems: "center",
+                  //   marginBottom: "10px",
+                  //   marginRight: "10px",
+                  // }}
                 >
                   <label
                     style={{
                       fontSize: "12px",
-                      marginBottom: "5px",
+                      // marginBottom: "2px",
+                      marginLeft: "10px",
                       color: colors.tabColor[100],
                     }}
                   >
@@ -227,46 +230,47 @@ const AddRules = () => {
                         minDate={startDateTime}
                         onChange={handleEndDateChange}
                         slotProps={{
-                          textField: { variant: "standard" },
+                          // textField: { variant: "standard" },
                           field: { clearable: true, onClear: () => clearEndDate() },
                         }}
                         className="customDatePicker"
-                        sx={{
-                          boxShadow: 0,
-                          marginRight: 2,
-                          width: isipadpro ? 130 : 150,
-                          backgroundColor:
-                            theme.palette.mode === "dark" ? "#848482" : "#FFF",
+                        // sx={{
+                        //   boxShadow: 0,
+                        //   marginRight: 2,
+                        //   width: isipadpro ? 130 : 150,
+                        //   backgroundColor:
+                        //     theme.palette.mode === "dark" ? "#848482" : "#FFF",
 
-                          "& .MuiInput-underline:before": {
-                            borderBottom: "none",
-                          },
+                        //   "& .MuiInput-underline:before": {
+                        //     borderBottom: "none",
+                        //   },
 
-                          "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
-                            borderBottom: "none",
-                          },
+                        //   "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+                        //     borderBottom: "none",
+                        //   },
 
-                          padding: "7px",
-                          "& .MuiInputBase-input": {
-                            padding: 0,
+                        //   padding: "7px",
+                        //   "& .MuiInputBase-input": {
+                        //     padding: 0,
 
-                            "&:hover": {
-                              border: "none", // Remove hover border effect
-                            },
-                          },
-                          "& .MuiSvgIcon-root": {
-                            fontSize: 18, // Adjust the font size of the clearable icon
-                          },
-                        }}
+                        //     "&:hover": {
+                        //       border: "none", // Remove hover border effect
+                        //     },
+                        //   },
+                        //   "& .MuiSvgIcon-root": {
+                        //     fontSize: 18, // Adjust the font size of the clearable icon
+                        //   },
+                        // }}
                       />
                     </Box>
                   </LocalizationProvider>
                 </div>
 
-                
+            <div style={{ display: "flex", flexDirection: "column", marginLeft: "5px" }}>
               <label 
                 style={{
-                  fontSize: "12px"
+                  fontSize: "12px",
+                  alignItems: "normal"
                 }}>
                   Select Service
               </label>
@@ -274,7 +278,7 @@ const AddRules = () => {
                 value={selectedService}
                 // onChange={handleSelectedServiceChange}
                 onChange={(e) => setSelectedService(e.target.value)}
-                style={{ width: "150px", marginBottom: '10px' }}
+                style={{ width: "230px", height: "40px", marginBottom: '10px' }}
               >
                 <MenuItem value="" disabled>Select a service</MenuItem>
                 {serviceListData.map((service, index) => (
@@ -283,17 +287,18 @@ const AddRules = () => {
                   </MenuItem>
                 ))}
               </Select>
+            
 
               <label 
                 style={{
-                  fontSize: "12px"
+                  fontSize: "12px",
                 }}>
                   Rule Type
               </label>
               <Select
                 value={ruleType}
                 onChange={(e) => setRuleType(e.target.value)}
-                style={{ width: "150px", marginBottom: '10px' }}
+                style={{ width: "230px", marginBottom: '10px' }}
               >
                 <MenuItem value="" disabled>Select Rule Type</MenuItem>
                 {ruleTypeList.map((ruleType, index) => (
@@ -302,6 +307,7 @@ const AddRules = () => {
                   </MenuItem>
                 ))}
               </Select>
+            </div>
 
               {ruleType === 'trace' && (
                 <>
@@ -363,14 +369,33 @@ const AddRules = () => {
 
               {ruleType === 'log' && (
                 <>
-                <TextField
+                {/* <TextField
                   required
                   id="filled-required"
                   label="Severity Text"
                   value={severityText}
                   onChange={(e) => setSeverityText(e.target.value)}
                   variant="outlined"
-                />
+                /> */}
+                <label 
+                  style={{
+                    fontSize: "12px"
+                  }}>
+                    Severity Text
+                </label>
+                <Select
+                  value={severityText}
+                  onChange={(e) => setSeverityText(e.target.value)}
+                  style={{ width: "230px", marginBottom: '10px' }}
+                >
+                  <MenuItem value="" disabled>Select Severity Text</MenuItem>
+                  {severityChanges.map((severityText, index) => (
+                    <MenuItem key={index} value={severityText} sx={{ color: 'black'}}>
+                      {severityText}
+                    </MenuItem>
+                  ))}
+                </Select>
+
                 <TextField
                   required
                   id="filled-required"
