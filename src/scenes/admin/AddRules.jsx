@@ -35,13 +35,12 @@ const AddRules = () => {
   console.log('userDetails:', userDetails);
 
   console.log("User Details", localStorage.getItem("userInfo"))
+  console.log("Service List------", localStorage.getItem("serviceListData"))
 
   const ruleTypeList = ['trace', 'metric', 'log']
   const severityChanges = ['Error', 'Severe', 'Warn', 'Info']
-
-  useEffect(() => {
-    console.log("useeffect called------------");
-  }, [])
+  const constraints = ['greaterThan', 'lessThan', 'greaterThanOrEqual', 'lessThanOrEqual']
+  const constraint = ['present', 'notpresent']
 
   const handleAddRules = async (event) => {
     try {
@@ -137,7 +136,6 @@ const AddRules = () => {
                   <label
                     style={{
                       fontSize: "12px",
-                      // marginBottom: "4px",
                       marginLeft: "10px",
                       color: colors.tabColor[100],
                     }}
@@ -163,36 +161,6 @@ const AddRules = () => {
                         //   textField: { variant: "standard" },
                         // }}
                         disableFuture
-                        // sx={{
-                        //   width: isipadpro ? 130 : 153,
-                        //   marginRight: 2,
-                        //   backgroundColor:
-                        //     theme.palette.mode === "dark" ? "#848482" : "#FFF",
-
-                        //   "& .MuiInput-underline:before": {
-                        //     borderBottom: "none", // Remove the default underline
-                        //   },
-
-                        //   "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
-                        //     borderBottom: "none",
-                        //   },
-
-                        //   padding: "7px",
-                        //   "& .MuiInputBase-input": {
-                        //     padding: 0,
-                        //     "&:hover": {
-                        //       border: "none", // Remove hover border effect
-                        //     },
-                        //   },
-                        //   "& .MuiInputBase-root": {
-                        //     "&:hover": {
-                        //       border: "none", // Remove hover border effect
-                        //     },
-                        //   },
-                        //   "& .MuiSvgIcon-root": {
-                        //     fontSize: 18, // Adjust the font size of the clearable icon
-                        //   },
-                        // }}
                       />
                     </Box>
                   </LocalizationProvider>
@@ -208,7 +176,6 @@ const AddRules = () => {
                   <label
                     style={{
                       fontSize: "12px",
-                      // marginBottom: "2px",
                       marginLeft: "10px",
                       color: colors.tabColor[100],
                     }}
@@ -230,37 +197,9 @@ const AddRules = () => {
                         minDate={startDateTime}
                         onChange={handleEndDateChange}
                         slotProps={{
-                          // textField: { variant: "standard" },
                           field: { clearable: true, onClear: () => clearEndDate() },
                         }}
                         className="customDatePicker"
-                        // sx={{
-                        //   boxShadow: 0,
-                        //   marginRight: 2,
-                        //   width: isipadpro ? 130 : 150,
-                        //   backgroundColor:
-                        //     theme.palette.mode === "dark" ? "#848482" : "#FFF",
-
-                        //   "& .MuiInput-underline:before": {
-                        //     borderBottom: "none",
-                        //   },
-
-                        //   "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
-                        //     borderBottom: "none",
-                        //   },
-
-                        //   padding: "7px",
-                        //   "& .MuiInputBase-input": {
-                        //     padding: 0,
-
-                        //     "&:hover": {
-                        //       border: "none", // Remove hover border effect
-                        //     },
-                        //   },
-                        //   "& .MuiSvgIcon-root": {
-                        //     fontSize: 18, // Adjust the font size of the clearable icon
-                        //   },
-                        // }}
                       />
                     </Box>
                   </LocalizationProvider>
@@ -278,7 +217,7 @@ const AddRules = () => {
                 value={selectedService}
                 // onChange={handleSelectedServiceChange}
                 onChange={(e) => setSelectedService(e.target.value)}
-                style={{ width: "230px", height: "40px", marginBottom: '10px' }}
+                style={{ width: "226px", height: "40px", marginBottom: '10px' }}
               >
                 <MenuItem value="" disabled>Select a service</MenuItem>
                 {serviceListData.map((service, index) => (
@@ -288,7 +227,6 @@ const AddRules = () => {
                 ))}
               </Select>
             
-
               <label 
                 style={{
                   fontSize: "12px",
@@ -298,7 +236,7 @@ const AddRules = () => {
               <Select
                 value={ruleType}
                 onChange={(e) => setRuleType(e.target.value)}
-                style={{ width: "230px", marginBottom: '10px' }}
+                style={{ width: "226px", marginBottom: '10px' }}
               >
                 <MenuItem value="" disabled>Select Rule Type</MenuItem>
                 {ruleTypeList.map((ruleType, index) => (
@@ -319,14 +257,27 @@ const AddRules = () => {
                   onChange={(e) => setDuration(e.target.value)}
                   variant="outlined"
                 />
-                <TextField
-                  required
-                  id="filled-required"
-                  label="Duration Constraint"
-                  value={durationConstraint}
-                  onChange={(e) => setDurationConstraint(e.target.value)}
-                  variant="outlined"
-                />
+
+                <div style={{ display: "flex", flexDirection: "column", marginLeft: "5px" }}>
+                  <label
+                    style={{
+                      fontSize: "12px"
+                    }}>
+                      Duration Constraint
+                  </label>
+                  <Select
+                    value={durationConstraint}
+                    onChange={(e) => setDurationConstraint(e.target.value)}
+                    style={{ width: "226px", marginBottom: '10px' }}
+                  >
+                    <MenuItem value="" disabled>Select Rule Type</MenuItem>
+                    {constraints.map((constraintDuration, index) => (
+                      <MenuItem key={index} value={constraintDuration} sx={{ color: 'black' }}>
+                        {constraintDuration}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
                 </>
               )}
 
@@ -340,14 +291,28 @@ const AddRules = () => {
                   onChange={(e) => setMemoryLimit(e.target.value)}
                   variant="outlined"
                 />
-                <TextField
-                  required
-                  id="filled-required"
-                  label="Memory Constraint"
-                  value={memoryConstraint}
-                  onChange={(e) => setMemoryConstraint(e.target.value)}
-                  variant="outlined"
-                />
+
+                <div style={{ display: "flex", flexDirection: "column", marginLeft: "5px" }}>
+                  <label
+                    style={{
+                      fontSize: "12px"
+                    }}>
+                      Memory Constraint
+                  </label>
+                  <Select
+                    value={memoryConstraint}
+                    onChange={(e) => setMemoryConstraint(e.target.value)}
+                    style={{ width: "226px", marginBottom: '10px' }}
+                  >
+                    <MenuItem value="" disabled>Select Memory Constraint</MenuItem>
+                    {constraints.map((constraintMemory, index) => (
+                      <MenuItem key={index} value={constraintMemory} sx={{ color: 'black'}}>
+                        {constraintMemory}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
+
                 <TextField
                   required
                   id="filled-required"
@@ -356,14 +321,27 @@ const AddRules = () => {
                   onChange={(e) => setCpuLimit(e.target.value)}
                   variant="outlined"
                 />
-                <TextField
-                  required
-                  id="filled-required"
-                  label="CPU Constraint"
-                  value={cpuConstraint}
-                  onChange={(e) => setCpuConstraint(e.target.value)}
-                  variant="outlined"
-                />
+
+                <div style={{ display: "flex", flexDirection: "column", marginLeft: "5px" }}>
+                  <label
+                    style={{
+                      fontSize: "12px"
+                    }}>
+                      CPU Constraint
+                  </label>
+                  <Select
+                    value={cpuConstraint}
+                    onChange={(e) => setCpuConstraint(e.target.value)}
+                    style={{ width: "226px", marginBottom: '10px' }}
+                  >
+                    <MenuItem value="" disabled>Select CPU Constraint</MenuItem>
+                    {constraints.map((constraintCpu, index) => (
+                      <MenuItem key={index} value={constraintCpu} sx={{ color: 'black'}}>
+                        {constraintCpu}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
                 </>
               )}
 
@@ -377,37 +355,51 @@ const AddRules = () => {
                   onChange={(e) => setSeverityText(e.target.value)}
                   variant="outlined"
                 /> */}
-                <label 
-                  style={{
-                    fontSize: "12px"
-                  }}>
-                    Severity Text
-                </label>
-                <Select
-                  value={severityText}
-                  onChange={(e) => setSeverityText(e.target.value)}
-                  style={{ width: "230px", marginBottom: '10px' }}
-                >
-                  <MenuItem value="" disabled>Select Severity Text</MenuItem>
-                  {severityChanges.map((severityText, index) => (
-                    <MenuItem key={index} value={severityText} sx={{ color: 'black'}}>
-                      {severityText}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <div style={{ display: "flex", flexDirection: "column", marginLeft: "5px" }}>
+                  <label 
+                    style={{
+                      fontSize: "12px"
+                    }}>
+                      Severity Text
+                  </label>
+                  <Select
+                    value={severityText}
+                    onChange={(e) => setSeverityText(e.target.value)}
+                    style={{ width: "226px", marginBottom: '10px' }}
+                  >
+                    <MenuItem value="" disabled>Select Severity Text</MenuItem>
+                    {severityChanges.map((severityText, index) => (
+                      <MenuItem key={index} value={severityText} sx={{ color: 'black'}}>
+                        {severityText}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
 
-                <TextField
-                  required
-                  id="filled-required"
-                  label="Severity Constraint"
-                  value={severityConstraint}
-                  onChange={(e) => setSeverityConstraint(e.target.value)}
-                  variant="outlined"
-                />
+                <div style={{ display: "flex", flexDirection: "column", marginLeft: "5px" }}>
+                  <label 
+                    style={{
+                      fontSize: "12px"
+                    }}>
+                      Severity Constraint
+                  </label>
+                  <Select
+                    value={severityConstraint}
+                    onChange={(e) => setSeverityConstraint(e.target.value)}
+                    style={{ width: "226px", marginBottom: '10px' }}
+                  >
+                    <MenuItem value="" disabled>Select Severity Constraint</MenuItem>
+                    {constraint.map((constraintSeverity, index) => (
+                      <MenuItem key={index} value={constraintSeverity} sx={{ color: 'black' }}>
+                        {constraintSeverity}
+                      </MenuItem>
+                    ))}
+                  </Select>  
+                </div>
                 </>
               )}
 
-                <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2,backgroundColor:"#091365",color:"white", "&:hover": { backgroundColor: "#091365" }, }} onClick={handleAddRules}>Submit</Button>
+                <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2,backgroundColor:"#091365",color:"white", "&:hover": { backgroundColor: "#091365" } }} onClick={handleAddRules}>Submit</Button>
             </div>
           </Box>
         </Paper>
