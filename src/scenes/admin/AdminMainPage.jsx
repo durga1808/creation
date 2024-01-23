@@ -42,7 +42,7 @@ const AdminTopBar = () => {
         const response = await loginUser(payload);
 
         // Do something with the fetched data
-        // console.log("clusterData adminPage", response.data.environments);
+        console.log("clusterData adminPage", response.data.environments);
         setClusterData(response.data.environments);
       } catch (error) {
         // Handle errors
@@ -114,8 +114,12 @@ const AdminTopBar = () => {
       setTimeout(() => {
         alert("Login Successfull !!!")
       }, 1000);
-    }else{
-      alert("Please verify your credentials and try again.")
+    }else if(ClusterLoginInfo==="Incorrect username or password."){
+      alert("Incorrect username or password.")
+    }
+    else
+    {
+      alert("Network Error !!.Please try again later.")
     }
    
 
