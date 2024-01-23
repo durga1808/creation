@@ -53,7 +53,7 @@ export const keycloakLogoutAuth = async () => {
 
 export const loginUser = async (data) => {
     try {
-        console.log("api call data", data);
+        console.log("api call loginUser data", data);
         const response = await axios.post(`${loginURL}/login`, data);
         return response;
     } catch (error) {
@@ -64,7 +64,7 @@ export const loginUser = async (data) => {
 
 export const getServiceList = async (userInfo) => {
   try {
-    console.log("api call data", userInfo);
+    console.log("api call getServiceList data", userInfo);
     const response = await axios.post(`${loginURL}/getServiceList`, userInfo);
     return response.data;
   } catch (error) {
@@ -75,19 +75,30 @@ export const getServiceList = async (userInfo) => {
 
 export const addRulesForService = async (addRules) => {
     try {
-        console.log("api call data", addRules);
+        console.log("api call addRulesForService data", addRules);
         const response = await axios.post(`${loginURL}/addServiceListNew`, addRules);
         return response.data;
     }
     catch (error) {
-        console.error("Error in login User:", error);
+        console.error("Error in addRulesForService:", error);
         throw error;
+    }
+}
+
+export const getAllRules = async (rule) => {
+    try {
+        console.log("Rule Details", rule)
+        const response = await axios.post(`${loginURL}/getServiceList`, rule)
+        return response.data
+    } catch (error) {
+        console.error("Error in displaying rules:", error)
+        throw error
     }
 }
 
 export const addClusterDetails = async (Cluster) => {
   try {
-    console.log("cluster api data", JSON.stringify(Cluster));
+    console.log("addClusterDetails api data", JSON.stringify(Cluster));
     // const data=JSON.stringify(Cluster);
     const response = await axios.post(`${loginURL}/register`, Cluster);
 
@@ -117,7 +128,7 @@ export const getClusterDetails = async () => {
   try {
     const response = await axios.get(`${loginURL}/register`);
 
-    console.log("response", response);
+    console.log(" getClusterDetails response", response);
     return response.data;
   } catch (error) {
     console.error("Error in get cluster User:", error);
@@ -129,7 +140,8 @@ export const openshiftClusterLogin = async (clusterUrl,password,username) => {
   try {
 
     console.log("clusterUrl",clusterUrl);
-    const response = await axios.get(`${openshiftLoginURL}?clusterUrl=${clusterUrl}&password=${password}&username=${username}`);
+    console.log("openshiftLoginURL",openshiftLoginURL);
+    const response = await axios.get(`${openshiftLoginURL}/login?clusterUrl=${clusterUrl}&password=${password}&username=${username}`);
 
     console.log("response", response);
    
