@@ -12,6 +12,11 @@ import {
   Select,
   MenuItem,
   Button,
+  Tabs,
+  Tab,
+  AppBar,
+  Toolbar,
+  Typography,
 } from "@mui/material";
 import {
   changeToInstrument,
@@ -19,123 +24,50 @@ import {
   getClusterListAllProjects,
 } from "../../api/ClusterApiService";
 import Loading from "../../global/Loading/Loading";
-
-const data = [
-  {
-    deploymentName: "openmetadata",
-    instrumented: "false",
-    namespaceName: "datamesh-space",
-  },
-  {
-    deploymentName: "zaga-airflow-db-migrations",
-    instrumented: "false",
-    namespaceName: "datamesh-space",
-    serviceName: "airflow",
-  },
-  {
-    deploymentName: "zaga-airflow-pgbouncer",
-    instrumented: "false",
-    namespaceName: "datamesh-space",
-    serviceName: "airflow",
-  },
-  {
-    deploymentName: "zaga-airflow-scheduler",
-    instrumented: "false",
-    namespaceName: "datamesh-space",
-    serviceName: "airflow",
-  },
-
-  {
-    deploymentName: "observai-persistent-entity-operator",
-    instrumented: "false",
-    namespaceName: "kafka-space",
-  },
-
-  {
-    deploymentName: "observai-indigo-ui",
-    instrumented: "false",
-    namespaceName: "observai-main",
-    serviceName: "observai-indigo-ui",
-  },
-
-  {
-    deploymentName: "observai-query-api",
-    instrumented: "false",
-    namespaceName: "observai-main",
-    serviceName: "observai-query-api",
-  },
-  {
-    deploymentName: "observai-ui",
-    instrumented: "false",
-    namespaceName: "observai-main",
-    serviceName: "observai-ui",
-  },
-  {
-    deploymentName: "order-srv-1",
-    instrumented: "true",
-    namespaceName: "observai-main",
-    serviceName: "order-srv-1",
-  },
-  {
-    deploymentName: "order-srv-2",
-    instrumented: "false",
-    namespaceName: "mongodb-space",
-    serviceName: "order-srv-2",
-  },
-  {
-    deploymentName: "vendor-srv-1",
-    instrumented: "true",
-    namespaceName: "observai-main",
-    serviceName: "vendor-srv-1",
-  },
-  {
-    deploymentName: "vendor-srv-1",
-    instrumented: "true",
-    namespaceName: "minio-operator",
-    serviceName: "vendor-srv-1",
-  },
-  {
-    deploymentName: "vendor-srv-1",
-    instrumented: "true",
-    namespaceName: "metallb-system",
-    serviceName: "vendor-srv-1",
-  },
-];
+import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
 
 const ClusterInfo = () => {
+  const navigate = useNavigate();
   const [data2, setData] = useState([]);
   const [namespaceOptions, setNamespaceOptions] = useState([]);
-  const [selectedNamespace, setSelectedNamespace] = useState("observai-main");
+  const [selectedNamespace, setSelectedNamespace] = useState("all");
   const [selectedInstrumented, setSelectedInstrumented] = useState("all");
   const [loading, setLoading] = useState(false);
-  const [InstrumentLoading,setInstrumentLoading]= useState(false);
+  const [InstrumentLoading, setInstrumentLoadig] = useState(false);
   const [changeInstrument, setChangeInstrument] = useState(false);
-  const [instrument,setInstrument]=useState('');
+  const [tabValue, setTabValue] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [emptyMessage, setEmptyMessage] = useState("");
 
 
   useEffect(() => {
-    console.log("clusterdetailUseeffectCalled");
-    console.log("changeInstrument", changeInstrument);
+    ServiceListsApiCall();
+  }, []);
 
-    const uniqueNamespaces = [
-      ...new Set(data.map((item) => item.namespaceName)),
-    ];
-    setNamespaceOptions(uniqueNamespaces);
-    const responseData = async () => {
+  
+  const ServiceListsApiCall = useCallback(async () => {
+    console.log("ServiceListsApiCall Called");
+    try {
       setLoading(true);
-      try {
-        const response = await getClusterListAllProjects();
-        console.log(response, "response");
+      var response = await getClusterListAllProjects();
+      if (response.length !== 0) {
         setData(response);
-      } catch (error) {
-        // Handle errors
-        console.error("Error fetching data:", error);
+        const uniqueNamespaces = [
+          ...new Set(response.map((item) => item.namespaceName)),
+        ];
+        setNamespaceOptions(uniqueNamespaces);
+      } else {
+        setEmptyMessage("No Data to show");
       }
-      setLoading(false);
-    };
 
-    // Call the async function immediately
-    responseData();
+      setLoading(false);
+    } catch (error) {
+      setErrorMessage("An error Occurred!");
+      console.error("Error fetching data:", error);
+      setLoading(false);
+    }
+    console.log("ServiceListsApiCall Ended");
   }, [changeInstrument]);
 
   const filteredData =
@@ -155,30 +87,37 @@ const ClusterInfo = () => {
   const handleInstrumentedChange = (event) => {
     setSelectedInstrumented(event.target.value);
   };
-  const handleInstrument = async (deploymentName, namespace) => {
-    setInstrumentLoading(true);
-  const instrumentresponse=  await changeToInstrument(namespace, deploymentName);
 
-  setInstrument(instrumentresponse.data);
-    setInstrumentLoading(false);
-    if(instrumentresponse.status===200){
+  const handleInstrument = async (deploymentName, namespace) => {
+    const instrumentresponse = await changeToInstrument(
+      namespace,
+      deploymentName
+    );
+
+    if (instrumentresponse.status === 200) {
+      ServiceListsApiCall();
       setChangeInstrument(!changeInstrument);
-    }else{
-      alert("Instrumentation Error: Something went wrong with the instrumentation.")
+      alert("Instrumentation in Progress: Please wait for a few minutes !!!");
+    } else {
+      alert(
+        "Instrumentation Error: Something went wrong with the instrumentation."
+      );
     }
-    
   };
 
   const handleUnInstrument = async (deploymentName, namespace) => {
-    setInstrumentLoading(true);
-    const instrumentresponse=await changeToUninstrument(namespace, deploymentName);
-  
-  setInstrument(instrumentresponse.data);
-    setInstrumentLoading(false);
-    if(instrumentresponse.status===200){
+    const instrumentresponse = await changeToUninstrument(
+      namespace,
+      deploymentName
+    );
+    if (instrumentresponse.status === 200) {
+      ServiceListsApiCall();
       setChangeInstrument(!changeInstrument);
-    }else{
-      alert("Instrumentation Error: Something went wrong with the instrumentation.")
+      alert("Uninstrumentation in Progress: Please wait for a few minutes !!!");
+    } else {
+      alert(
+        "Uninstrumentation Error: Something went wrong with the Uninstrumentation."
+      );
     }
   };
 
@@ -186,38 +125,66 @@ const ClusterInfo = () => {
     <div>
       {loading ? (
         <Loading />
-      ) :
-      //  filteredData.length > 0 ?
-        (
-          <div>
+      ) : emptyMessage ? (
+        <div
+          className="empty-message"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "73vh",
+          }}
+        >
+          <Typography variant="h5" fontWeight={"600"}>
+            {emptyMessage}
+          </Typography>
+        </div>
+      ) : errorMessage ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "80vh",
+          }}
+        >
+          <Typography variant="h5" fontWeight={"600"}>
+            {errorMessage}
+          </Typography>
+        </div>
+      ) : (
+        <div>
           <div
             style={{
               display: "flex",
               justifyContent: "flex-end",
-              margin: "10px",
             }}
           >
             <FormControl>
               <label
                 style={{
                   fontSize: "12px",
+                  color: "#FFF",
                 }}
               >
                 NameSpace
               </label>
               <Select
-                style={{ width: "170px" }}
+                style={{
+                  width: "170px",
+                  backgroundColor: "#FFF",
+                  height: "40px",
+                  marginBottom: "10px",
+                }}
                 labelId="namespace-select-label"
                 id="namespace-select"
                 value={selectedNamespace}
                 onChange={handleNamespaceChange}
               >
-                {/*            
-           <MenuItem value="all">All</MenuItem>
-           <MenuItem value="observai-main">observai-main</MenuItem>
-           <MenuItem value="datamesh-space">datamesh-space</MenuItem> */}
                 <MenuItem value="all">All</MenuItem>
-                {/* Dynamically populate menu items based on unique namespace values */}
+
                 {namespaceOptions.map((namespace, index) => (
                   <MenuItem key={index} value={namespace}>
                     {namespace}
@@ -226,16 +193,22 @@ const ClusterInfo = () => {
               </Select>
             </FormControl>
             <FormControl sx={{ marginLeft: "10px" }}>
-              {/* <InputLabel id="instrumented-select-label">Instrumented</InputLabel> */}
               <label
                 style={{
                   fontSize: "12px",
+                  color: "#FFF",
                 }}
               >
                 Instrumented
               </label>
               <Select
-                style={{ width: "170px" }}
+                style={{
+                  width: "170px",
+                  backgroundColor: "#FFF",
+                  height: "40px",
+                  marginBottom: "10px",
+                  marginRight: "15px",
+                }}
                 labelId="instrumented-select-label"
                 id="instrumented-select"
                 value={selectedInstrumented}
@@ -285,13 +258,9 @@ const ClusterInfo = () => {
                         <TableCell>{item.deploymentName}</TableCell>
                         <TableCell>{item.namespaceName}</TableCell>
                         <TableCell>{item.serviceName || "Nil"}</TableCell>
-
                         <TableCell>
-                          {item.instrumented === "true"
-                          // ||instrument==='instrumented'
-                           ? (
-                          
-                          <Button
+                          {item.instrumented === "true" ? (
+                            <Button
                               sx={{
                                 backgroundColor: "green",
                                 "&:hover": { backgroundColor: "green" },
@@ -305,7 +274,6 @@ const ClusterInfo = () => {
                             >
                               Instrumented
                             </Button>
-                            
                           ) : (
                             <Button
                               sx={{
@@ -323,42 +291,6 @@ const ClusterInfo = () => {
                             </Button>
                           )}
                         </TableCell>
-                        {/* {InstrumentLoading?(<Loading sx={{fontSize:"10px"}}/> ):(<TableCell>
-                          {item.instrumented === "true" ? (
-                          
-                          <Button
-                              sx={{
-                                backgroundColor: "green",
-                                "&:hover": { backgroundColor: "green" },
-                              }}
-                              onClick={() =>
-                                handleUnInstrument(
-                                  item.deploymentName,
-                                  item.namespaceName
-                                )
-                              }
-                            >
-                              Instrumented
-                            </Button>
-                            
-                          ) : (
-                            <Button
-                              sx={{
-                                backgroundColor: "red",
-                                "&:hover": { backgroundColor: "red" },
-                              }}
-                              onClick={() =>
-                                handleInstrument(
-                                  item.deploymentName,
-                                  item.namespaceName
-                                )
-                              }
-                            >
-                              Uninstrumented
-                            </Button>
-                          )}
-                        </TableCell>)} */}
-                       
                       </TableRow>
                     ))}
                 </TableBody>
@@ -366,11 +298,7 @@ const ClusterInfo = () => {
             </TableContainer>
           </div>
         </div>
-       
-      ) }
-      {/* : (
-        <h4>Error occured</h4>
-      )} */}
+      )}
     </div>
   );
 };

@@ -59,8 +59,8 @@ const AdminTopBar = () => {
   };
 
   const handleAddRules = () => {
-    navigate("addRules")
-  }
+    navigate("addRules");
+  };
 
   const handleEditRow = (
     rowId,
@@ -105,25 +105,27 @@ const AdminTopBar = () => {
     password: "Selvam@3799",
   };
 
-  const handleClusterOpen = async (clusterUrl,password,username)=>{
-    const ClusterLoginInfo = await openshiftClusterLogin(clusterUrl,password,username);
-    console.log("infooo",ClusterLoginInfo);
-    if(ClusterLoginInfo==="Login successful!"){
-      navigate('clusterinfo')
-      // 
+  const handleClusterOpen = async (clusterUrl, password, username) => {
+    const ClusterLoginInfo = await openshiftClusterLogin(
+      clusterUrl,
+      password,
+      username
+    );
+    console.log("infooo", ClusterLoginInfo);
+    if (ClusterLoginInfo === "Login successful!") {
+      navigate("clusterDashboard");
       setTimeout(() => {
-        alert("Login Successfull !!!")
+        alert("Login Successfull !!!");
       }, 1000);
-    }else if(ClusterLoginInfo==="Incorrect username or password."){
-      alert("Incorrect username or password.")
+    } else if (ClusterLoginInfo === "Incorrect username or password.") {
+      alert("Incorrect username or password.");
+    } else {
+      alert("Network Error !!.Please try again later.");
     }
-    else
-    {
-      alert("Network Error !!.Please try again later.")
-    }
-   
+  };
 
-  
+  const handleHomepage =()=>{
+    navigate("/")
   }
 
   // 091365
@@ -139,6 +141,16 @@ const AdminTopBar = () => {
           >
             Cluster
           </Typography>
+          <Button
+            onClick={handleHomepage}
+            sx={{
+              backgroundColor: "gray",
+              marginRight: "20px",
+              "&:hover": { backgroundColor: "gray" },
+            }}
+          >
+            Home
+          </Button>
           <Button
             onClick={handleAddRules}
             sx={{
@@ -259,10 +271,13 @@ const AdminTopBar = () => {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={() =>
-                          handleClusterOpen(row.hostUrl,
-                            row.clusterPassword,
-                            row.clusterUsername)
+                        onClick={
+                          () =>
+                            handleClusterOpen(
+                              row.hostUrl,
+                              row.clusterPassword,
+                              row.clusterUsername
+                            )
                           // openshiftClusterLogin
                         }
                       >

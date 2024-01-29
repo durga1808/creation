@@ -16,10 +16,6 @@ export const getClusterListAllProjects = async () => {
 
 export const changeToInstrument = async (namespace, deploymentName) => {
   try {
-    //http://localhost:8081/openshift/instrument/mongodb-space/mongodb-kubernetes-operator
-    // console.log("Instrumention",namespace,deploymentName);
-    // const url = `${openshiftLoginURL}/instrument/${namespace}/${deploymentName}`;
-    // console.log("URL",url);
     const response = await axios.post(
       `${openshiftLoginURL}/instrument/${namespace}/${deploymentName}`
     );
@@ -35,10 +31,6 @@ export const changeToInstrument = async (namespace, deploymentName) => {
 
 export const changeToUninstrument = async (namespace, deploymentName) => {
   try {
-    //http://localhost:8081/openshift/unInstrument/mongodb-space/mongodb-kubernetes-operator
-    // console.log("uninstrumention",namespace,deploymentName);
-    // const url = `${openshiftLoginURL}/unInstrument/${namespace}/${deploymentName}`;
-    // console.log("URL",url);
     const response = await axios.post(
       `${openshiftLoginURL}/unInstrument/${namespace}/${deploymentName}`
     );
