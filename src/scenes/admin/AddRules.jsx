@@ -38,7 +38,7 @@ const AddRules = () => {
   console.log("Service List------", localStorage.getItem("serviceListData"))
 
   const ruleTypeList = ['trace', 'metric', 'log']
-  const severityChanges = ['Error', 'Severe', 'Warn', 'Info']
+  const severityChanges = ['ERROR', 'SEVERE', 'WARN', 'INFO']
   const constraints = ['greaterThan', 'lessThan', 'greaterThanOrEqual', 'lessThanOrEqual']
   const constraint = ['present', 'notpresent']
 
@@ -347,14 +347,6 @@ const AddRules = () => {
 
               {ruleType === 'log' && (
                 <>
-                {/* <TextField
-                  required
-                  id="filled-required"
-                  label="Severity Text"
-                  value={severityText}
-                  onChange={(e) => setSeverityText(e.target.value)}
-                  variant="outlined"
-                /> */}
                 <div style={{ display: "flex", flexDirection: "column", marginLeft: "5px" }}>
                   <label 
                     style={{

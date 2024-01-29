@@ -96,6 +96,18 @@ export const getAllRules = async (rule) => {
     }
 }
 
+export const updateServiceList = async (updateService) => {
+    try {
+        console.log("Updated Service Data", updateService)
+        const response = await axios.put(`${loginURL}/updateServiceList`, updateService)
+        return response.data
+    } catch (error) {
+        console.error("Error in Updating Rules Data", error)
+        console.error("Error Response:", error.response); 
+        throw error
+    }
+}
+
 export const addClusterDetails = async (Cluster) => {
   try {
     console.log("addClusterDetails api data", JSON.stringify(Cluster));
@@ -136,11 +148,26 @@ export const getClusterDetails = async () => {
   }
 };
 
+// export const openshiftClusterLogin = async (clusterUrl,password,username) => {
+//   try {
+
+//     console.log("clusterUrl",clusterUrl);
+//     console.log("openshiftLoginURL",openshiftLoginURL);
+//     const response = await axios.get(`${openshiftLoginURL}/login?clusterUrl=${clusterUrl}&password=${password}&username=${username}`);
+
+//     console.log("response", response);
+   
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error in get openshiftClusterLogin User:", error);
+//     throw error;
+//   }
+// };
+
 export const openshiftClusterLogin = async (clusterUrl,password,username) => {
   try {
-
-    console.log("clusterUrl",clusterUrl);
-    console.log("openshiftLoginURL",openshiftLoginURL);
+    console.log("clusterUserName",username);
+    console.log("clusterPassword",password);
     const response = await axios.get(`${openshiftLoginURL}/login?clusterUrl=${clusterUrl}&password=${password}&username=${username}`);
 
     console.log("response", response);

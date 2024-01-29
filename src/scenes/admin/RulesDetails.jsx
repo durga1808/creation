@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
+import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, TextField, Paper, Button, Grid, styled } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { getAllRules } from '../../api/LoginApiService';
+import { getAllRules, updateServiceList } from '../../api/LoginApiService';
+import { useTheme } from '@mui/material';
+import { tokens } from "../../theme";
 
 function createData(serviceName, rules) {
   return {
@@ -23,9 +13,55 @@ function createData(serviceName, rules) {
   };
 }
 
-function Row(props) {
-  const { row } = props;
+function Row({ row }) {
   const [open, setOpen] = useState(false)
+  const [editable, setEditable] = useState(false);
+  const [editedRules, setEditedRules] = useState(row.rules);
+
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
+  const StyledTableCell = styled(TableCell)(() => ({
+    borderBottom: "none"
+  }));
+
+  const handleEdit = () => {
+    setEditable(true);
+    setOpen(!open)
+  };
+
+  const handleInputChange = (index, property, value) => {
+    const updatedRules = [...editedRules];
+    if (property === 'severityText') {
+      updatedRules[index] = {
+        ...updatedRules[index],
+        [property]: [value],
+      };
+    } else {
+      updatedRules[index] = { ...updatedRules[index], [property]: value };
+    }
+    setEditedRules(updatedRules);
+    setEditable(true);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const updatedServiceRules = {
+        serviceName: row.serviceName,
+        rules: editedRules,
+      }
+      const response = await updateServiceList(updatedServiceRules);
+      console.log('Updated Rules:', editedRules);
+
+      console.log('Request Payload:', updatedServiceRules);
+      console.log('Server Response:', response);
+
+        console.log('Rules updated successfully', response);
+        setEditable(false);
+    } catch (error) {
+      console.error('Error updating rules:', error);
+    }
+  };
 
   return (
     <>
@@ -43,15 +79,28 @@ function Row(props) {
                 <Typography variant='h6'>
                     {row.serviceName}
                 </Typography>
-                
             </TableCell>
-            {/* <TableCell component="th" scope="row">
-                {row.rules.ruleType}
-            </TableCell> */}
+
             <TableCell>
-                <Button variant="contained" color="primary" onClick={() => console.log('View Details clicked')}>
-                    Edit
+              {editable ? (
+                <>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleUpdate}
+                  >
+                    Save
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleEdit}
+                >
+                  Edit
                 </Button>
+              )}
             </TableCell>
 
       </TableRow>
@@ -59,72 +108,132 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
                 <Box sx={{ margin: 1 }}>
-                    <Typography variant="h4" component="div">
-                        Rules
-                    </Typography>
+                  <Typography variant="h4">
+                    Rules
+                  </Typography>
 
-                    {row.rules && row.rules.length > 0 ? (
-                        row.rules.map((rule, index) => (
-                            <div key={index}>
+                    {editedRules && editedRules.length > 0 ? (
+                        <Grid container spacing={2}>
+                          {editedRules.map((rule, index) => (
+                            <Grid item key={index} xs={12} md={6} lg={4}>
+                              {/* <div key={index}> */}
                                 <br />
-                                <Typography variant="h5" component="div">
-                                    <span style={{ fontWeight: "500" }}>Rule Type:</span> {rule.ruleType}
-                                </Typography>
-                                <Typography variant="h5" component="div">
-                                    <span style={{ fontWeight: "500" }}>Start Date:</span> {rule.startDateTime}
-                                </Typography>
-                                <Typography variant="h5" component="div">
-                                    <span style={{ fontWeight: "500" }}>Expiry Date:</span> {rule.expiryDateTime}
-                                </Typography>
+                                <>
+                                  <TableRow>
+                                    <StyledTableCell>Rule Type:</StyledTableCell>
+                                    <StyledTableCell>{rule.ruleType}</StyledTableCell>
+                                  </TableRow>
+
+                                  <TableRow>
+                                    <StyledTableCell>Start Date:</StyledTableCell>
+                                    {editable ? (
+                                          <TextField sx={{ padding: "10px" }} value={rule.startDateTime} onChange={(e) => handleInputChange(index, 'startDateTime', e.target.value)} />
+                                        ) : (
+                                          <StyledTableCell>{rule.startDateTime}</StyledTableCell>
+                                        )}
+                                  </TableRow>
+
+                                  <TableRow>
+                                      <StyledTableCell>Expiry Date:</StyledTableCell>
+                                      {editable ? (
+                                        <TextField sx={{ padding: "10px" }} value={rule.expiryDateTime} onChange={(e) => handleInputChange(index, 'expiryDateTime', e.target.value)} />
+                                      ) : (
+                                        <StyledTableCell>{rule.expiryDateTime}</StyledTableCell>
+                                      )}
+                                  </TableRow>
+                                </>
                                 
                                 {rule.ruleType === 'trace' && (
                                     <>
-                                        <Typography variant="h5" component="div">
-                                            <span style={{ fontWeight: "500" }}>Duration:</span> {rule.duration}
-                                        </Typography>
+                                        <TableRow>
+                                            <StyledTableCell>Duration:</StyledTableCell>
+                                              {editable ? (
+                                                <TextField sx={{ padding: "10px" }} value={rule.duration} onChange={(e) => handleInputChange(index, 'duration', e.target.value)} />
+                                              ) : (
+                                                <StyledTableCell>{rule.duration}</StyledTableCell>
+                                              )}
+                                        </TableRow>
 
-                                        <Typography variant="h5" component="div">
-                                            <span style={{ fontWeight: "500" }}>Duration Constraint:</span> {rule.durationConstraint}
-                                        </Typography>
+                                        <TableRow>
+                                            <StyledTableCell>Duration Constraint:</StyledTableCell>
+                                            {editable ? (
+                                              <TextField sx={{ padding: "10px" }} value={rule.durationConstraint} onChange={(e) => handleInputChange(index, 'durationConstraint', e.target.value)}/>
+                                            ) : (
+                                              <StyledTableCell>{rule.durationConstraint} </StyledTableCell>
+                                            )}
+                                        </TableRow>
                                     </>
                                 )}
 
                                 {rule.ruleType === 'metric' && (
                                     <>
-                                        <Typography variant="h5" component="div">
-                                            <span style={{ fontWeight: "500" }}>Memory Limit:</span> {rule.memoryLimit}
-                                        </Typography>
+                                        <TableRow>
+                                            <StyledTableCell>Memory Limit:</StyledTableCell>
+                                            {editable ? (
+                                              <TextField sx={{ padding: "10px" }} value={rule.memoryLimit} onChange={(e) => handleInputChange(index, 'memoryLimit', e.target.value)}/>
+                                            ) : (
+                                              <StyledTableCell>{rule.memoryLimit}</StyledTableCell>
+                                            )}
+                                        </TableRow>
 
-                                        <Typography variant="h5" component="div">
-                                            <span style={{ fontWeight: "500" }}>Memory Constraint:</span> {rule.memoryConstraint}
-                                        </Typography>
+                                        <TableRow>
+                                            <StyledTableCell>Memory Constraint:</StyledTableCell>
+                                            {editable ? (
+                                              <TextField sx={{ padding: "10px" }} value={rule.memoryConstraint} onChange={(e) => handleInputChange(index, 'memoryConstraint', e.target.value)} />
+                                            ) : (
+                                              <StyledTableCell>{rule.memoryConstraint}</StyledTableCell>
+                                            )}
+                                        </TableRow>
 
-                                        <Typography variant="h5" component="div">
-                                            <span style={{ fontWeight: "500" }}>CPU Limit:</span> {rule.cpuLimit}
-                                        </Typography>
+                                        <TableRow>
+                                            <StyledTableCell>CPU Limit:</StyledTableCell>
+                                            {editable ? (
+                                              <TextField sx={{ padding: "10px" }} value={rule.cpuLimit} onChange={(e) => handleInputChange(index, 'cpuLimit', e.target.value)} />
+                                            ) : (
+                                              <StyledTableCell>{rule.cpuLimit}</StyledTableCell>
+                                            )}
+                                        </TableRow>
 
-                                        <Typography variant="h5" component="div">
-                                            <span style={{ fontWeight: "500" }}>CPU Constraint:</span> {rule.cpuConstraint}
-                                        </Typography>
+                                        <TableRow>
+                                            <StyledTableCell>CPU Constraint:</StyledTableCell>
+                                            {editable ? (
+                                              <TextField sx={{ padding: "10px" }} value={rule.cpuConstraint} onChange={(e) => handleInputChange(index, 'cpuConstraint', e.target.value)} />
+                                            ) : (
+                                              <StyledTableCell>{rule.cpuConstraint}</StyledTableCell>
+                                            )}
+                                        </TableRow>
                                     </>
                                 )}
 
                                 {rule.ruleType === 'log' && (
-                                    <>
-                                        <Typography variant="h5" component="div">
-                                            <span style={{ fontWeight: "500" }}>Severity Text:</span> {rule.severityText}
-                                        </Typography>
+                                        <>
+                                          <TableRow>
+                                            <StyledTableCell>Severity Text:</StyledTableCell>
+                                            {editable ? (
+                                                <TextField sx={{ padding: "10px" }} value={rule.severityText} onChange={(e) => handleInputChange(index, 'severityText', e.target.value)} />
+                                              ) : (
+                                                <StyledTableCell>{rule.severityText}</StyledTableCell>
+                                              )}
+                                          </TableRow>
 
-                                        <Typography variant="h5" component="div">
-                                            <span style={{ fontWeight: "500" }}>Severity Constraint:</span> {rule.severityConstraint}
-                                        </Typography>
-                                    </>
+                                          <TableRow>
+                                              <StyledTableCell>Severity Constraint:</StyledTableCell>
+                                              {/* {rule.severityConstraint} */}
+                                              {editable ? (
+                                                <TextField sx={{ padding: "10px" }} value={rule.severityConstraint} onChange={(e) => handleInputChange(index, 'severityConstraint', e.target.value)} />
+                                              ) : (
+                                                <StyledTableCell>{rule.severityConstraint}</StyledTableCell>
+                                              )}
+                                          </TableRow>
+                                        </>
                                 )}
-                            </div>
-                        ))
+                                </Grid>
+                            ))
+                            }
+                        </Grid>
                         ) : (
-                        <Typography variant="h6" component="div">
-                            No rules available for this service.
+                        <Typography variant="h6">
+                          No rules available for this service.
                         </Typography>
                     )}
                 </Box>
@@ -135,26 +244,26 @@ function Row(props) {
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    serviceName: PropTypes.string.isRequired,
-    rules: PropTypes.arrayOf(
-      PropTypes.shape({
-        ruleType: PropTypes.string.isRequired,
-        startDateTime: PropTypes.string.isRequired,
-        expiryDateTime: PropTypes.string.isRequired,
-        duration: PropTypes.number,
-        durationConstraint: PropTypes.string,
-        memoryLimit: PropTypes.number,
-        memoryConstraint: PropTypes.string,
-        cpuLimit: PropTypes.number,
-        cpuConstraint: PropTypes.string,
-        severityText: PropTypes.arrayOf(PropTypes.string),
-        severityConstraint: PropTypes.string,
-      })
-    ).isRequired,
-  }).isRequired,
-};
+// Row.propTypes = {
+//   row: PropTypes.shape({
+//     serviceName: PropTypes.string.isRequired,
+//     rules: PropTypes.arrayOf(
+//       PropTypes.shape({
+//         ruleType: PropTypes.string.isRequired,
+//         startDateTime: PropTypes.string.isRequired,
+//         expiryDateTime: PropTypes.string.isRequired,
+//         duration: PropTypes.number,
+//         durationConstraint: PropTypes.string,
+//         memoryLimit: PropTypes.number,
+//         memoryConstraint: PropTypes.string,
+//         cpuLimit: PropTypes.number,
+//         cpuConstraint: PropTypes.string,
+//         severityText: PropTypes.arrayOf(PropTypes.string),
+//         severityConstraint: PropTypes.string,
+//       })
+//     ).isRequired,
+//   }).isRequired,
+// };
 
 const rows = [
     createData('order-srv-1', [
@@ -223,7 +332,6 @@ const RulesDetails = () => {
                 console.error('Error fetching rules:', error);
             }
         }
-
         handleGetAllRules();
     }, [])
 
@@ -234,7 +342,6 @@ const RulesDetails = () => {
           <TableRow>
             <TableCell />
             <TableCell>Service Name</TableCell>
-            {/* <TableCell>Rule Type</TableCell> */}
             <TableCell>Action</TableCell>
           </TableRow>
         </TableHead>
