@@ -59,6 +59,7 @@ const GlobalContextProvider = ({ children }) => {
   const [showError, setShowError] = useState(false);
   const [erroredLogData, setErroredLogData] = useState([]);
   const [navActiveTab, setNavActiveTab] = useState(0);
+  const [ClusterActiveTab, setClusterActiveTab] = useState(0);
   const [DbSummaryService, setDbSummaryService] = useState([]);
 
   const [traceSelectedService, setTraceSelectedService] = useState([]);
@@ -86,8 +87,8 @@ const GlobalContextProvider = ({ children }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [keycloackroles, setKeyClockRoles] = useState([]);
-    const [userDetails, setUserDetails] = useState(null);
-    const [serviceListData, setServiceListData] = useState([]);
+  const [userDetails, setUserDetails] = useState(null);
+  const [serviceListData, setServiceListData] = useState([]);
 
   return (
     <GlobalContext.Provider
@@ -182,6 +183,8 @@ const GlobalContextProvider = ({ children }) => {
         setErroredLogData,
         navActiveTab,
         setNavActiveTab,
+        ClusterActiveTab,
+        setClusterActiveTab,
         DbSummaryService,
         setDbSummaryService,
         setTraceSelectedService,
@@ -214,13 +217,16 @@ const GlobalContextProvider = ({ children }) => {
         setNotificationCount,
         alertResponse,
         setAlertResponse,
-                userDetails, setUserDetails, serviceListData, setServiceListData,
+        userDetails,
+        setUserDetails,
+        serviceListData,
+        setServiceListData,
         username,
         setUsername,
         password,
         setPassword,
         keycloackroles,
-        setKeyClockRoles
+        setKeyClockRoles,
       }}
     >
       {children}

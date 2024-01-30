@@ -12,6 +12,7 @@ import {
   TableRow,
   Paper,
   TextField,
+  Box,
 } from "@mui/material";
 import {
   getClusterDetails,
@@ -20,6 +21,7 @@ import {
   updateClusterDetails,
 } from "../../api/LoginApiService";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/zaga-logedit.jpg";
 
 const AdminTopBar = () => {
   const navigate = useNavigate();
@@ -58,9 +60,7 @@ const AdminTopBar = () => {
     navigate("addCluster");
   };
 
-  const handleAddRules = () => {
-    navigate("addRules");
-  };
+
 
   const handleEditRow = (
     rowId,
@@ -124,58 +124,114 @@ const AdminTopBar = () => {
     }
   };
 
-  const handleHomepage =()=>{
-    navigate("/")
-  }
+  const handleHomepage = () => {
+    navigate("/");
+  };
 
   // 091365
 
   return (
     <div>
       <AppBar position="static">
-        <Toolbar sx={{ backgroundColor: "midnightblue" }}>
-          <Typography
-            variant="h4"
-            component="div"
-            sx={{ flexGrow: 1, color: "white", fontWeight: "bold" }}
-          >
-            Cluster
-          </Typography>
-          <Button
-            onClick={handleHomepage}
-            sx={{
-              backgroundColor: "gray",
-              marginRight: "20px",
-              "&:hover": { backgroundColor: "gray" },
-            }}
-          >
-            Home
-          </Button>
-          <Button
-            onClick={handleAddRules}
-            sx={{
-              backgroundColor: "gray",
-              marginRight: "20px",
-              "&:hover": { backgroundColor: "gray" },
-            }}
-          >
-            Add Rule
-          </Button>
-          <Button
-            onClick={handleAddCluster}
-            sx={{
-              backgroundColor: "gray",
-              marginRight: "20px",
-              "&:hover": { backgroundColor: "gray" },
-            }}
-          >
-            Add Cluster
-          </Button>
+        <Toolbar
+          sx={{
+            backgroundColor: "#00888C",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{display:"flex"}}>
+            <img
+              src={logo}
+              alt="Logo"
+              style={{
+                width: "60px",
+                height: "27px",
+                marginRight: "20px",
+              }}
+            />
+            <Typography
+              sx={{
+                color: "#FFF",
+                borderLeft: "4px solid white",
+                paddingLeft: "20px",
+                fontWeight: "bold",
+              }}
+              variant="h3"
+              fontWeight="500"
+              marginLeft={1}
+            >
+              Cluster Management
+            </Typography>
+          </div>
+          
+
+          {/* <div> */}
+          {/* <Box style={{ margin: "15px 20px 10px 0px", display: "flex" }}>
+                <div><img
+                  src={logo}
+                  alt="Logo"
+                  style={{
+                    width: "60px",
+                    height: "27px",
+                    marginRight: "20px",
+                  }}
+                />
+                <Typography
+                  sx={{
+                    color: "#FFF",
+                    borderLeft: "4px solid white",
+                    paddingLeft: "20px",
+                    fontWeight: "bold",
+                  }}
+                  variant="h3"
+                  fontWeight="500"
+                  marginLeft={1}
+                >
+                  Cluster Management
+                </Typography></div>
+                
+              </Box> */}
+          {/* </div> */}
+
+          {/* <div> */}
+
+          {/* </div> */}
+          {/* </div> */}
         </Toolbar>
       </AppBar>
-      <TableContainer component={Paper} sx={{ marginTop: 4 }}>
+      <div style={{display:"flex",justifyContent:"flex-end",marginTop:"10px"}} >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleHomepage}
+              sx={{
+                fontWeight:"bold",
+                backgroundColor: "lightgray",
+                marginRight: "20px",
+                "&:hover": { backgroundColor: "lightgray" },
+              }}
+            >
+              Home
+            </Button>
+           
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddCluster}
+              sx={{
+                fontWeight:"bold",
+                backgroundColor: "lightgray",
+                marginRight: "20px",
+                "&:hover": { backgroundColor: "lightgray" },
+              }}
+            >
+              Add Cluster
+            </Button>
+          </div>
+      <TableContainer component={Paper} sx={{ marginTop: 2 }}>
         <Table>
-          <TableHead sx={{ backgroundColor: "midnightblue" }}>
+          <TableHead sx={{ backgroundColor: "#00888C" }}>
             <TableRow>
               <TableCell align="center" sx={{ color: "white" }}>
                 User Name
@@ -245,6 +301,11 @@ const AdminTopBar = () => {
                       <Button
                         variant="contained"
                         color="primary"
+                        sx={{
+                          backgroundColor: "lightgrey",
+                          marginRight: "20px",
+                          "&:hover": { backgroundColor: "lightgrey" },
+                        }}
                         onClick={() =>
                           handleEditRow(
                             row.clusterId,
@@ -258,9 +319,14 @@ const AdminTopBar = () => {
                         Edit
                       </Button>
                       <Button
-                        sx={{ marginLeft: "10px" }}
                         variant="contained"
                         color="primary"
+                        sx={{
+                          marginLeft: "10px",
+                          backgroundColor: "lightgrey",
+                          marginRight: "20px",
+                          "&:hover": { backgroundColor: "lightgrey" },
+                        }}
                         onClick={handleSaveRow}
                       >
                         Save
@@ -271,6 +337,11 @@ const AdminTopBar = () => {
                       <Button
                         variant="contained"
                         color="primary"
+                        sx={{
+                          backgroundColor: "lightgrey",
+                          marginRight: "20px",
+                          "&:hover": { backgroundColor: "lightgrey" },
+                        }}
                         onClick={
                           () =>
                             handleClusterOpen(
@@ -284,7 +355,12 @@ const AdminTopBar = () => {
                         Open
                       </Button>
                       <Button
-                        sx={{ marginLeft: "10px" }}
+                        sx={{
+                          marginLeft: "10px",
+                          backgroundColor: "lightgrey",
+                          marginRight: "20px",
+                          "&:hover": { backgroundColor: "lightgrey" },
+                        }}
                         variant="contained"
                         color="primary"
                         onClick={() =>
