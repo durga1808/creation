@@ -5,6 +5,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { getAllRules, updateServiceList } from '../../api/LoginApiService';
 import { useTheme } from '@mui/material';
 import { tokens } from "../../theme";
+import Loading from "../../global/Loading/Loading";
 
 function createData(serviceName, rules) {
   return {

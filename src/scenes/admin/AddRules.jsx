@@ -20,8 +20,9 @@ const AddRules = () => {
   const [startDateTime, setStartDateTime] = useState(new Date());
   const [cpuConstraint, setCpuConstraint] = useState('');
   const [durationConstraint, setDurationConstraint] = useState('');
-  const [severityText, setSeverityText] = useState("");
+  const [severityText, setSeverityText] = useState([]);
   const [severityConstraint, setSeverityConstraint] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   // const [maxEndDate, setMaxEndDate] = useState(false);
 
   const theme = useTheme();
@@ -48,8 +49,38 @@ const AddRules = () => {
       if (userDetails && userDetails.roles) {
         if (!selectedService || !ruleType) {
           console.error('Error: Please select a service and rule type.');
+          setErrorMessage("Please select a Service and Rule Type");
           return;
         }
+
+        switch (ruleType) {
+          case 'trace':
+            if (!duration || !durationConstraint) {
+              console.error('Error: Please enter duration and duration constraint for trace rule.');
+              setErrorMessage("Please enter Duration and Duration Constraint for Trace rule");
+              return;
+            }
+            break;
+          case 'metric':
+            if (!memoryLimit || !memoryConstraint || !cpuLimit || !cpuConstraint) {
+              console.error('Error: Please enter memory limit, memory constraint, CPU limit, and CPU constraint for metric rule.');
+              setErrorMessage("Please enter Memory Limit, Memory Constraint, CPU Limit, and CPU Constraint for Metric rule");
+              return;
+            }
+            break;
+          case 'log':
+            if (!severityText.length || !severityConstraint) {
+              console.error('Error: Please select severity text and severity constraint for log rule.');
+              setErrorMessage("Please select Severity Text and Severity Constraint for Log rule");
+              return;
+            }
+            break;
+          default:
+            console.error('Error: Invalid rule type.');
+            setErrorMessage("Invalid Rule Type");
+            return;
+        }
+
         const dataToSend = {
           serviceName: selectedService,
           roles: userDetails.roles,
@@ -63,7 +94,7 @@ const AddRules = () => {
             startDateTime: format(startDateTime, "yyyy-MM-dd'T'HH:mm:ss"),
             cpuConstraint: cpuConstraint,
             durationConstraint: durationConstraint,
-            severityText: [severityText],
+            severityText: severityText,
             severityConstraint: severityConstraint
           }]
         }
@@ -73,19 +104,17 @@ const AddRules = () => {
         await addRulesForService(dataToSend)
         .catch(error => {
           console.error('Error in response:', error.response);
+          setErrorMessage(error.response.data)
        });
       } else {
         console.error('Error: userDetails or userDetails.roles is null or undefined');
+        setErrorMessage("userDetails or userDetails.roles is null or undefined")
       }
     } catch (error) {
       console.error('Error adding rules:', error);
+      setErrorMessage("Error adding rules")
     }
   } 
-
-  // const handleSelectedServiceChange = (event) => {
-  //   console.log('Selected service:', event.target.value);
-  //   setSelectedService(event.target.value);
-  // }
 
   const handleStartDateChange = (date) => {
     const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ss");
@@ -107,6 +136,15 @@ const AddRules = () => {
   const clearEndDate = () => {
     console.log('Clearing end date');
     setExpiryDateTime(null);
+  }
+
+  const handleSeverity = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setSeverityText(
+      typeof value === 'string' ? value.split(',') : value,
+    );
   }
 
   return (
@@ -355,14 +393,15 @@ const AddRules = () => {
                       Severity Text
                   </label>
                   <Select
+                    multiple
                     value={severityText}
-                    onChange={(e) => setSeverityText(e.target.value)}
+                    onChange={handleSeverity}
                     style={{ width: "226px", marginBottom: '10px' }}
                   >
                     <MenuItem value="" disabled>Select Severity Text</MenuItem>
-                    {severityChanges.map((severityText, index) => (
-                      <MenuItem key={index} value={severityText} sx={{ color: 'black'}}>
-                        {severityText}
+                    {severityChanges.map((severityTextSelect, index) => (
+                      <MenuItem key={index} value={severityTextSelect} sx={{ color: 'black' }}>
+                        {severityTextSelect}
                       </MenuItem>
                     ))}
                   </Select>
@@ -390,7 +429,7 @@ const AddRules = () => {
                 </div>
                 </>
               )}
-
+                {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
                 <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2,backgroundColor:"#091365",color:"white", "&:hover": { backgroundColor: "#091365" } }} onClick={handleAddRules}>Submit</Button>
             </div>
           </Box>
