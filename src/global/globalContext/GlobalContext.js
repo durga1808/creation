@@ -86,7 +86,7 @@ const GlobalContextProvider = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [keycloackroles, setKeyClockRoles] = useState([]);
+  // const [keycloackroles, setKeyClockRoles] = useState([]);
   const [userDetails, setUserDetails] = useState(null);
   const [serviceListData, setServiceListData] = useState([]);
 
@@ -225,8 +225,8 @@ const GlobalContextProvider = ({ children }) => {
         setUsername,
         password,
         setPassword,
-        keycloackroles,
-        setKeyClockRoles,
+        // keycloackroles,
+        // setKeyClockRoles,
       }}
     >
       {children}
