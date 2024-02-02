@@ -57,7 +57,7 @@ const AdminTopBar = () => {
   }, [editableRowId]);
 
   const handleAddCluster = () => {
-    navigate("addCluster");
+    navigate("/admin/addCluster");
   };
 
 
@@ -113,7 +113,7 @@ const AdminTopBar = () => {
     );
     console.log("infooo", ClusterLoginInfo);
     if (ClusterLoginInfo === "Login successful!") {
-      navigate("clusterDashboard");
+      navigate("/admin/clusterDashboard/*");
       setTimeout(() => {
         alert("Login Successfull !!!");
       }, 1000);
@@ -132,7 +132,7 @@ const AdminTopBar = () => {
 
   return (
     <div>
-      <AppBar position="static">
+      {/* <AppBar position="static">
         <Toolbar
           sx={{
             backgroundColor: "#00888C",
@@ -164,42 +164,8 @@ const AdminTopBar = () => {
               Cluster Management
             </Typography>
           </div>
-          
-
-          {/* <div> */}
-          {/* <Box style={{ margin: "15px 20px 10px 0px", display: "flex" }}>
-                <div><img
-                  src={logo}
-                  alt="Logo"
-                  style={{
-                    width: "60px",
-                    height: "27px",
-                    marginRight: "20px",
-                  }}
-                />
-                <Typography
-                  sx={{
-                    color: "#FFF",
-                    borderLeft: "4px solid white",
-                    paddingLeft: "20px",
-                    fontWeight: "bold",
-                  }}
-                  variant="h3"
-                  fontWeight="500"
-                  marginLeft={1}
-                >
-                  Cluster Management
-                </Typography></div>
-                
-              </Box> */}
-          {/* </div> */}
-
-          {/* <div> */}
-
-          {/* </div> */}
-          {/* </div> */}
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
       <div style={{display:"flex",justifyContent:"flex-end",marginTop:"10px"}} >
             <Button
               variant="contained"

@@ -26,6 +26,7 @@ import ClusterInfo from "./scenes/admin/ClusterInfo";
 import AddRules from "./scenes/admin/AddRules";
 import RulesDetails from "./scenes/admin/RulesDetails";
 import CllusterDashboard from "./scenes/admin/CllusterDashboard";
+import AdminTopBar from "./scenes/admin/AdminTopbar";
 // import { useTokenExpirationCheck } from "./global/TokenExpiry";
 
 function App() {
@@ -108,12 +109,18 @@ function App() {
 
   const AdminSection = () => {
     return (
-      <Routes>
-        <Route index element={<AdminMainPage />} />
-        <Route path="addCluster" element={<AddCluster />} />
-        <Route path="addRules" element={<AddRules />} />
-        <Route path="clusterDashboard/*" element={<ClusterAndRulesSection />} />
-      </Routes>
+      <div>
+        <AdminTopBar />
+        <Routes>
+          <Route path="adminpage" element={<AdminMainPage />} />
+          <Route path="addCluster" element={<AddCluster />} />
+          <Route path="addRules" element={<AddRules />} />
+          <Route
+            path="clusterDashboard/*"
+            element={<ClusterAndRulesSection />}
+          />
+        </Routes>
+      </div>
     );
   };
 

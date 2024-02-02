@@ -54,7 +54,7 @@ import {
     }
 
     const handleAdminPage = () => {
-      navigate(authenticated ? "/admin" : "/notAuth");
+      navigate(authenticated ? "/admin/adminpage" : "/notAuth");
     }
 
   
