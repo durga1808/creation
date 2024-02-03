@@ -267,8 +267,10 @@ const DashboardTopBar = () => {
   const handleTabChangePages = (event, newValue) => {
     if (newValue === 0) {
       navigate("/mainpage/dashboard");
+      
     } else if (newValue === 1) {
       navigate("/mainpage/apm");
+      setApmActiveTab(0);
     }
     setNavActiveTab(newValue);
   };
