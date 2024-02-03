@@ -164,7 +164,7 @@ const Metrics = () => {
     // setEmptyMessage("");
     setTraceSummaryService([]);
     setLogSummaryService([]);
-    setNavActiveTab(2);
+    setNavActiveTab(1);
     if (!metricRender) {
       console.log("Selected Service 222222222222" + selectedService);
       getAllMetricsData(selectedService);

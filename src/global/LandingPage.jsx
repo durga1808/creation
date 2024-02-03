@@ -48,9 +48,14 @@ import {
     const handleobservability = () => {
       navigate(authenticated ? "/mainpage/dashboard" : "/notAuth");
     };
+
+    const handlesustainability = () => {
+      navigate(authenticated ? "/mainpage/sustainability" : "/notAuth");
+    };
   
     const handleInfra = () => {
-      navigate(authenticated ? "/mainpage/apm" : "/notAuth");
+      // navigate(authenticated ? "/mainpage/apm" : "/notAuth");
+      navigate("/notAuth");
     }
 
     const handleAdminPage = () => {
@@ -197,7 +202,7 @@ import {
                      color="info" 
                      onClick={handleInfra}
                     >
-                      Open Observability
+                      Open Infrastructure
                     </Button>
                   </CardActions>
                 </Card>
@@ -231,7 +236,7 @@ import {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="info">
+                    <Button size="small" color="info" onClick={handlesustainability}>
                       Open Sustainability
                     </Button>
                   </CardActions>
