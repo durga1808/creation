@@ -111,7 +111,7 @@ import { isTokenExpired, logout } from "./AuthMechanism";
       if (authenticated) {
         // If the user is authenticated
         if (userRole.includes("admin") ) {
-          navigate("/admin");
+          navigate("/admin/adminMainpage");
         } else {
           navigate("/notAuth");
         }
