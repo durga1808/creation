@@ -9,83 +9,120 @@ import {
     Typography,
   } from "@mui/material";
   import Box from "@mui/material/Box";
-  import React, { useEffect, useState } from "react";
+  import React, { useEffect, useMemo, useState } from "react";
   import Observai from "../assets/observai.png";
   import Infra from "../assets/Infra.jpeg";
   import Sustainability from "../assets/sustainability.jpeg";
   import Admin from "../assets/admin.jpeg";
   import ZagaLogo from "../assets/zaga-logedit.jpg";
   import LoginIcon from "@mui/icons-material/Login";
+  import LogoutIcon from "@mui/icons-material/Logout";
   import { useNavigate } from "react-router-dom";
+import { useTokenExpirationCheck } from "./TokenExpiry";
+import { isTokenExpired, logout } from "./AuthMechanism";
   
   const LandingPage = () => {
     const navigate = useNavigate();
     const [authenticated, setAuthenticated] = useState(false);
+    const [userRole, setUserRole] = useState("")
 
     console.log("authenticated", authenticated);
 
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     console.log("userInfo", userInfo);
-    
-  
+
+    // const checkTokenExpiration = useTokenExpirationCheck();
+
+    const checkTokenExpiration = useTokenExpirationCheck();
+
+    // Memoize the function to prevent unnecessary re-renders
+    const memoizedCheckTokenExpiration = useMemo(() => checkTokenExpiration, []);
+
     useEffect(() => {
-      // Check if the user is authenticated
       const userDetails = localStorage.getItem("userInfo");
+      // checkTokenExpiration();
+      memoizedCheckTokenExpiration();
   
       if (userDetails) {
-        const admin = JSON.parse(userDetails);
-        const admincheck = admin.roles && admin.roles.includes("admin");
-  
-        // Set the authenticated state based on the user's role
-        setAuthenticated(admincheck);
+        const user = JSON.parse(userDetails);
+        const checkRole = user.roles;
+        setAuthenticated(!!checkRole);
+        setUserRole(user.roles)
       }
-    }, []);
+    }, [memoizedCheckTokenExpiration]);
   
     const handlelogin = () => {
       navigate("/login");
+    };
+
+    const handleLogout = async () => {
+      // Check if the token is expired
+      const accessToken = localStorage.getItem("accessToken");
+      if (accessToken && isTokenExpired(accessToken)) {
+        // Token is expired, clear local storage and navigate to the home page
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("roles");
+        localStorage.removeItem("userInfo");
+        navigate("/");
+        return;
+      }
+  
+      // Set a flag to indicate that the user has logged out
+      localStorage.setItem("loggedOut", true);
+  
+      try {
+        // Attempt to call the Keycloak logout API
+        await logout();
+      } catch (error) {
+        // Handle errors from the logout API call
+        console.error("Logout request failed:", error);
+      }
+  
+      // Clear tokens from localStorage (even if Keycloak logout API fails)
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("roles");
+      localStorage.removeItem("userInfo");
+  
+      // Navigate to the home page
+      navigate("/");
+      setAuthenticated(false)
     };
   
     const handleobservability = () => {
       navigate(authenticated ? "/mainpage/dashboard" : "/notAuth");
     };
 
-    const handlesustainability = () => {
-      navigate(authenticated ? "/mainpage/sustainability" : "/notAuth");
-    };
   
     const handleInfra = () => {
       // navigate(authenticated ? "/mainpage/apm" : "/notAuth");
       navigate("/notAuth");
     }
 
-    const handleAdminPage = () => {
-      navigate(authenticated ? "/admin/adminpage" : "/notAuth");
+   
+
+    const handleSustainability = () => {
+      navigate(authenticated ? "/mainpage/sustainability" : "/notAuth");
     }
 
-  
-
-  // const handleInfra = () => {
-  //     if (authenticated) {
-  //       // Check if the user has the 'vendor' role
-  //       const userDetails = JSON.parse(localStorage.getItem("userInfo"));
-  //       const isVendor = userDetails && userDetails.roles.includes("admin");
-
-  //       if (isVendor) {
-  //         // If the user is a vendor, navigate to the Infra page
-  //         navigate("/mainpage/apm");
-  //       } else {
-  //         // If the user is not a vendor, you can show an error message or handle it accordingly
-  //         console.error("Unauthorized access: Vendor access only.");
-  //       }
-  //     } else {
-  //       // If the user is not authenticated, navigate to the login page
-  //       navigate("/login");
-  //     }
-  //   };
+    const handleAdminPage = () => {
+      // navigate(authenticated ? "/admin" : "/notAuth");
+      if (authenticated) {
+        // If the user is authenticated
+        if (userRole.includes("admin") ) {
+          navigate("/admin");
+        } else {
+          navigate("/notAuth");
+        }
+      } else {
+        navigate("/notAuth");
+      }
+    }  
 
   return (
     <div style={{ margin: "30px", display: "flex", flexDirection: "column" }}>
-      {/* Header Section */}
+
       <div
         style={{
           display: "flex",
@@ -94,7 +131,7 @@ import {
           marginBottom: "110px",
         }}
       >
-        {/* Zaha Logo */}
+
         <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
           <Box
             component="img"
@@ -104,19 +141,24 @@ import {
               maxHeight: { xs: 233, md: 167 },
               maxWidth: { xs: 350, md: 250 },
             }}
-            // alt="The house from the offer."
             src={ZagaLogo}
           />
         </div>
 
-        {/* Login Icon */}
         <div
-        style={{ marginLeft: "10px" }}>
-          <IconButton onClick={handlelogin}>
+          style={{ marginLeft: "10px" }}>
+          {authenticated ? (
+            <IconButton onClick={handleLogout}>
+            <LogoutIcon />
+          </IconButton>
+          ) : (
+            <IconButton onClick={handlelogin}>
             <LoginIcon />
           </IconButton>
+          )}
+          
         </div>
-        </div>
+      </div>
   
         <Box
           sx={{
@@ -236,7 +278,7 @@ import {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="info" onClick={handlesustainability}>
+                    <Button size="small" color="info" onClick={handleSustainability}>
                       Open Sustainability
                     </Button>
                   </CardActions>

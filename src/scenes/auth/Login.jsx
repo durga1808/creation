@@ -26,17 +26,15 @@ const Login = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const { serviceListData, setServiceListData, setServiceList, setSelected, setNotificationCount, alertResponse, notificationCount, setAlertResponse,
-    username,setUsername,password,setPassword ,keycloackroles,
-    setKeyClockRoles
- , userDetails, setUserDetails } = useContext(GlobalContext);
+  const { setServiceList, setSelected, setNotificationCount, alertResponse, notificationCount, setAlertResponse,
+    userDetails, setUserDetails } = useContext(GlobalContext);
 
-  // const [username, setUsername] = useState("");
-  // const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState("none");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  // const [serviceListData, setServiceListData] = useState([]);
+  const [serviceListData, setServiceListData] = useState([]);
 
   const servicePayload = (serviceData) => {
     serviceData.forEach((item) => {
@@ -172,11 +170,11 @@ const Login = () => {
         servicePayload(serviceData);
         fetchAlerts();
         localStorage.setItem("userInfo", JSON.stringify(userInfo));
-        setUserDetails(userInfo);
+        // setUserDetails(userInfo);
         navigate("/");
         console.log("userInfo",userInfo.roles);
         // setKeyClockRoles(userInfo.roles)
-        console.log("keycloackroles",keycloackroles);
+        // console.log("keycloackroles",keycloackroles);
         // Extract roles from the userInfo
         // const userRoles = userInfo.roles;
 
@@ -191,25 +189,26 @@ const Login = () => {
         //   // Default route for other roles
         //   navigate("/mainpage/dashboard");
         // }
-        console.log("UserDetails---------------", userDetails);
-        console.log("username", userDetails.username)
-        console.log("password", userDetails.password)
-        console.log("userrole", userDetails.roles)
-        console.log("userInfo " + JSON.stringify(userInfo));
-        console.log("serviceData " + serviceListData);
+        // console.log("UserDetails---------------", userDetails);
+        // console.log("username", userDetails.username)
+        // console.log("password", userDetails.password)
+        // console.log("userrole", userDetails.roles)
+        // console.log("userInfo " + JSON.stringify(userInfo));
+        // console.log("serviceData " + serviceListData);
       } else {
         setErrorMessage("No Service assigned for this user");
       }
     } catch (error) {
       console.log("error " + error);
+      console.error("error------------", error)
       setErrorMessage("An error occurred");
       await logout();
     }
   };
 
-  useEffect(() => {
-    console.log("UserDetails---------------", userDetails);
-  }, [userDetails]);
+  // useEffect(() => {
+  //   console.log("UserDetails---------------", userDetails);
+  // }, [userDetails]);
 
   const handleLogin = async () => {
     try {

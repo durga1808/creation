@@ -49,11 +49,11 @@ function Topbar() {
   } = useContext(GlobalContext);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const checkTokenExpiration = useTokenExpirationCheck();
+  // const checkTokenExpiration = useTokenExpirationCheck();
 
-  useEffect(() => {
-    checkTokenExpiration();
-  }, [checkTokenExpiration]);
+  // useEffect(() => {
+  //   checkTokenExpiration();
+  // }, [checkTokenExpiration]);
 
 
   const handleIconClick = (event) => {
