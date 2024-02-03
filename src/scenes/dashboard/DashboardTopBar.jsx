@@ -267,16 +267,11 @@ const DashboardTopBar = () => {
   const handleTabChangePages = (event, newValue) => {
     if (newValue === 0) {
       navigate("/mainpage/dashboard");
+      
     } else if (newValue === 1) {
-      navigate("/mainpage/sustainability");
-    } else if (newValue === 2) {
       navigate("/mainpage/apm");
+      setApmActiveTab(0);
     }
-    // } else if (newValue === 3) {
-    //   navigate("/mainpage/metrics");
-    // } else if (newValue === 4) {
-    //   navigate("/mainpage/logs");
-    // }
     setNavActiveTab(newValue);
   };
 
@@ -463,44 +458,91 @@ const DashboardTopBar = () => {
               ) : null}
             </div>
           ) : (
+            // <div>
+            //   {window.location.pathname === "/mainpage/dashboard" ||
+            //   window.location.pathname === "/mainpage/apm" ||
+            //   window.location.pathname === "/mainpage/sustainability" ||
+            //   window.location.pathname === "/mainpage/sustainability/node" ||
+            //   window.location.pathname === "/mainpage/sustainability/host" ||
+            //   window.location.pathname === "/mainpage/apm" ||
+            //   window.location.pathname === "/mainpage/apm/metrics" ||
+            //   window.location.pathname === "/mainpage/apm/logs" ||
+            //   window.location.pathname === "/mainpage/dashboard/logSummary" ||
+            //   window.location.pathname === "/mainpage/dashboard/dbSummary" ||
+            //   window.location.pathname ===
+            //     "/mainpage/dashboard/kafkaSummary" ? (
+            //     <Tabs
+            //       value={navActiveTab}
+            //       onChange={handleTabChangePages}
+            //       TabIndicatorProps={{
+            //         sx: {
+            //           borderRadius: 3,
+            //         },
+            //       }}
+            //       textColor="inherit"
+            //       indicatorColor="primary"
+            //     >
+            //       <Tab label="Observability" sx={{ color: "#FFF" }} />
+            //       <Tab label="Sustainability" sx={{ color: "#FFF" }} />
+
+            //       <Tab label="APM" sx={{ color: "#FFF" }} />
+            //     </Tabs>
+            //   ) : null}
+            // </div>
             <div>
-              {window.location.pathname === "/mainpage/dashboard" ||
-              window.location.pathname === "/mainpage/apm" ||
-              window.location.pathname === "/mainpage/sustainability" ||
-              window.location.pathname === "/mainpage/sustainability/node" ||
-              window.location.pathname === "/mainpage/sustainability/host" ||
-              window.location.pathname === "/mainpage/apm" ||
-              window.location.pathname === "/mainpage/apm/metrics" ||
-              window.location.pathname === "/mainpage/apm/logs" ||
-              window.location.pathname === "/mainpage/dashboard/logSummary" ||
-              window.location.pathname === "/mainpage/dashboard/dbSummary" ||
-              window.location.pathname ===
-                "/mainpage/dashboard/kafkaSummary" ? (
-                <Tabs
-                  value={navActiveTab}
-                  onChange={handleTabChangePages}
-                  TabIndicatorProps={{
-                    sx: {
-                      // height: 2,
-                      borderRadius: 3,
-                      // backgroundColor: colors.tabIndicator[500],
-                    },
-                  }}
-                  textColor="inherit"
-                  indicatorColor="primary"
-                >
-                  <Tab label="Observability" sx={{ color: "#FFF" }} />
-                  <Tab label="Sustainability" sx={{ color: "#FFF" }} />
+            {window.location.pathname === "/mainpage/dashboard" ||
+            window.location.pathname === "/mainpage/apm" ||
+            window.location.pathname === "/mainpage/apm/metrics" ||
+            window.location.pathname === "/mainpage/apm/logs" ||
+            window.location.pathname === "/mainpage/dashboard/logSummary" ||
+            window.location.pathname === "/mainpage/dashboard/dbSummary" ||
+            window.location.pathname ===
+              "/mainpage/dashboard/kafkaSummary" ? (
+              <Tabs
+                value={navActiveTab}
 
-                  <Tab label="APM" sx={{ color: "#FFF" }} />
 
-                  {/*                   
-                    <Tab label="Traces" sx={{ color: "#FFF" }} />
-                    <Tab label="Metrics" sx={{ color: "#FFF" }} />
-                    <Tab label="Logs" sx={{ color: "#FFF" }} /> */}
-                </Tabs>
-              ) : null}
-            </div>
+                onChange={handleTabChangePages}
+                TabIndicatorProps={{
+                  sx: {
+                    borderRadius: 3,
+                  },
+                }}
+                textColor="inherit"
+                indicatorColor="primary"
+              >
+                <Tab label="Observability" sx={{ color: "#FFF" }} />
+
+                <Tab label="APM" sx={{ color: "#FFF" }} />
+              </Tabs>
+            ) : 
+            (
+              <div>
+                {window.location.pathname === "/mainpage/sustainability" ||
+                window.location.pathname ===
+                  "/mainpage/sustainability/node" ||
+                window.location.pathname ===
+                  "/mainpage/sustainability/host" ? (
+
+                    <Tabs
+                    value={0}
+    
+                    onChange={handleTabChangePages}
+                    TabIndicatorProps={{
+                      sx: {
+                        borderRadius: 3,
+                      },
+                    }}
+                    textColor="inherit"
+                    indicatorColor="primary"
+                  ><Tab label="Sustainability" sx={{ color: "#FFF" }} /></Tabs>
+
+
+                  
+                ) : null}
+              </div>)
+            }
+          </div>
           )}
           <Box
             sx={{

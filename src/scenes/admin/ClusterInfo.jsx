@@ -26,8 +26,8 @@ import {
 import Loading from "../../global/Loading/Loading";
 import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
-import CustomAlert from "./CustomAlert";
 import LoadingOverlay from "react-loading-overlay";
+import FadeLoader from 'react-spinners/FadeLoader'
 
 const ClusterInfo = () => {
   const [data2, setData] = useState([]);
@@ -68,6 +68,8 @@ const ClusterInfo = () => {
       setErrorMessage("An error Occurred!");
       console.error("Error fetching data:", error);
       setLoading(false);
+      setInstrumentLoadig(false);
+
     }
     console.log("ServiceListsApiCall Ended");
   }, [changeInstrument]);
@@ -99,7 +101,7 @@ const ClusterInfo = () => {
     if (instrumentresponse.status === 200) {
       ServiceListsApiCall();
       setChangeInstrument(!changeInstrument);
-      setMessage("Instrumentation in Progress: Please wait for a few minutes !!!");
+      setMessage("Instrumentation in Progress: Please wait for a few minutes ...");
       setInstrumentLoadig(true);
       // alert("Instrumentation in Progress: Please wait for a few minutes !!!");
     } else {
@@ -117,7 +119,7 @@ const ClusterInfo = () => {
     if (instrumentresponse.status === 200) {
       ServiceListsApiCall();
       setChangeInstrument(!changeInstrument);
-      setMessage("Uninstrumentation in Progress: Please wait for a few minutes !!!");
+      setMessage("Uninstrumentation in Progress: Please wait for a few minutes ...");
       setInstrumentLoadig(true);
       // alert("Uninstrumentation in Progress: Please wait for a few minutes !!!");
     } else {
@@ -131,7 +133,13 @@ const ClusterInfo = () => {
     <div>
       <LoadingOverlay
       active={InstrumentLoading}
-      // spinner
+      spinner={<FadeLoader color="white" />}
+      styles={{
+        overlay: (base) => ({
+          ...base,
+          background: 'black'
+        })
+      }}
       text={message}>
         {loading ? (
           <Loading />

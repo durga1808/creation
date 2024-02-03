@@ -107,7 +107,7 @@ const HostDashboardCharts = () => {
         setErrorMessage("");
         setEmptyMessage("");
         setKeplerActiveTab(2);
-        setNavActiveTab(1);
+        // setNavActiveTab(1);
         // createPodMetricData(keplerContainerInfoContainer);
         fetchPowerMetrics();
     }, [setErrorMessage, setEmptyMessage, setKeplerActiveTab, setNavActiveTab, fetchPowerMetrics])

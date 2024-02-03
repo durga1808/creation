@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Box,
   Collapse,
@@ -23,6 +23,7 @@ import { useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../global/Loading/Loading";
+import { GlobalContext } from "../../global/globalContext/GlobalContext";
 
 function createData(serviceName, rules) {
   return {
@@ -35,6 +36,7 @@ function Row({ row }) {
   const [open, setOpen] = useState(false);
   const [editable, setEditable] = useState(false);
   const [editedRules, setEditedRules] = useState(row.rules);
+  const [errorMessage, setErrorMessage] = useState("")
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -45,22 +47,39 @@ function Row({ row }) {
 
   const handleEdit = () => {
     setEditable(true);
-    setOpen(!open);
+    // setOpen(!open);
   };
+
+  // const handleInputChange = (index, property, value) => {
+  //   const updatedRules = [...editedRules];
+  //   if (property === "severityText") {
+  //     updatedRules[index] = {
+  //       ...updatedRules[index],
+  //       [property]: [value],
+  //     };
+  //   } else {
+  //     updatedRules[index] = { ...updatedRules[index], [property]: value };
+  //   }
+  //   setEditedRules(updatedRules);
+  //   setEditable(true);
+  // };
 
   const handleInputChange = (index, property, value) => {
     const updatedRules = [...editedRules];
+  
     if (property === "severityText") {
+      const severityArray = value.split(',').map(item => item.trim().toUpperCase());
       updatedRules[index] = {
         ...updatedRules[index],
-        [property]: [value],
+        [property]: severityArray,
       };
     } else {
       updatedRules[index] = { ...updatedRules[index], [property]: value };
     }
+  
     setEditedRules(updatedRules);
     setEditable(true);
-  };
+  };  
 
   const handleUpdate = async () => {
     try {
@@ -78,6 +97,7 @@ function Row({ row }) {
       setEditable(false);
     } catch (error) {
       console.error("Error updating rules:", error);
+      setErrorMessage("Error Updating Rules")
     }
   };
 
@@ -317,7 +337,7 @@ function Row({ row }) {
                             {editable ? (
                               <TextField
                                 sx={{ padding: "10px" }}
-                                value={rule.severityText}
+                                value={rule.severityText.join(', ')}
                                 onChange={(e) =>
                                   handleInputChange(
                                     index,
@@ -328,7 +348,8 @@ function Row({ row }) {
                               />
                             ) : (
                               <StyledTableCell>
-                                {rule.severityText}
+                                {/* {rule.severityText} */}
+                                {rule.severityText.join(', ')}
                               </StyledTableCell>
                             )}
                           </TableRow>
@@ -373,27 +394,6 @@ function Row({ row }) {
     </>
   );
 }
-
-// Row.propTypes = {
-//   row: PropTypes.shape({
-//     serviceName: PropTypes.string.isRequired,
-//     rules: PropTypes.arrayOf(
-//       PropTypes.shape({
-//         ruleType: PropTypes.string.isRequired,
-//         startDateTime: PropTypes.string.isRequired,
-//         expiryDateTime: PropTypes.string.isRequired,
-//         duration: PropTypes.number,
-//         durationConstraint: PropTypes.string,
-//         memoryLimit: PropTypes.number,
-//         memoryConstraint: PropTypes.string,
-//         cpuLimit: PropTypes.number,
-//         cpuConstraint: PropTypes.string,
-//         severityText: PropTypes.arrayOf(PropTypes.string),
-//         severityConstraint: PropTypes.string,
-//       })
-//     ).isRequired,
-//   }).isRequired,
-// };
 
 const rows = [
   createData("order-srv-1", [
@@ -443,7 +443,10 @@ const rows = [
 
 const RulesDetails = () => {
   const navigate = useNavigate();
+  const { serviceListData, setServiceListData } = useContext(GlobalContext)
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("")
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const payload = {
@@ -455,14 +458,19 @@ const RulesDetails = () => {
   useEffect(() => {
     const handleGetAllRules = async () => {
       try {
+        setLoading(true)
         const data = await getAllRules(payload);
         const rowsData = data.map((item) =>
           createData(item.serviceName, item.rules)
         );
         setRows(rowsData);
+        setLoading(false);
+        setServiceListData(data)
         console.log("Rules Lists:", data);
       } catch (error) {
         console.error("Error fetching rules:", error);
+        setErrorMessage("Error in Displaying Rules")
+        setLoading(false)
       }
     };
     handleGetAllRules();
@@ -474,44 +482,64 @@ const RulesDetails = () => {
 
   return (
     <div style={{ marginTop: "0px" }}>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAddRules}
-          sx={{
-            marginTop: "15px",
-            height: "35px",
-            fontWeight: "bold",
-            backgroundColor: "lightgray",
-            marginRight: "20px",
-            "&:hover": { backgroundColor: "lightgray" },
+      {loading ? (
+        <Loading />
+      ) : errorMessage ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "80vh",
           }}
         >
-          Add Rule
-        </Button>
-      </div>
+          <Typography variant="h5" fontWeight={"600"}>
+            {errorMessage}
+          </Typography>
+        </div>
+      ) : (
+        <>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddRules}
+              sx={{
+                marginTop: "15px",
+                height: "35px",
+                fontWeight: "bold",
+                backgroundColor: "lightgray",
+                marginRight: "20px",
+                "&:hover": { backgroundColor: "lightgray" },
+              }}
+            >
+              Add Rule
+            </Button>
+          </div>
 
-      <TableContainer component={Paper} sx={{marginTop:"10px"}}>
-        <Table aria-label="collapsible table">
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ color: "white", backgroundColor: "#00888C" }} />
-              <TableCell sx={{ color: "white", backgroundColor: "#00888C" }}>
-                Service Name
-              </TableCell>
-              <TableCell sx={{ color: "white", backgroundColor: "#00888C" }}>
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <Row key={row.serviceName} row={row} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+          <TableContainer component={Paper} sx={{marginTop:"10px"}}>
+            <Table aria-label="collapsible table">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ color: "white", backgroundColor: "#00888C" }} />
+                  <TableCell sx={{ color: "white", backgroundColor: "#00888C" }}>
+                    Service Name
+                  </TableCell>
+                  <TableCell sx={{ color: "white", backgroundColor: "#00888C" }}>
+                    Action
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row) => (
+                  <Row key={row.serviceName} row={row} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
+      )}
     </div>
   );
 };

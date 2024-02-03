@@ -6,11 +6,13 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useTheme } from '@emotion/react';
 import { tokens } from '../../theme';
 import { format, parseISO } from 'date-fns';
+import { useNavigate } from "react-router-dom";
 import { addRulesForService } from '../../api/LoginApiService';
 
 const AddRules = () => {
-  const {serviceListData, userDetails} = useContext(GlobalContext);
-  const [selectedService, setSelectedService] = useState(serviceListData[0] || "");
+  const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem("userInfo")))
+  const [serviceListDetails, setServiceListDetails] = useState(JSON.parse(localStorage.getItem("serviceListData")))
+  const [selectedService, setSelectedService] = useState(serviceListDetails[0] || "");
   const [memoryConstraint, setMemoryConstraint] = useState("");
   const [expiryDateTime, setExpiryDateTime] = useState(new Date());
   const [duration, setDuration] = useState(0);
@@ -27,13 +29,14 @@ const AddRules = () => {
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const navigate = useNavigate();
 
 //   const isipadpro = useMediaQuery((theme) =>
 //   theme.breakpoints.only("isipadpro")
 // );
 
-  console.log('serviceListData:', serviceListData);
-  console.log('userDetails:', userDetails);
+  console.log('serviceListData:', serviceListDetails);
+  console.log('userDetails:', userInfo);
 
   console.log("User Details", localStorage.getItem("userInfo"))
   console.log("Service List------", localStorage.getItem("serviceListData"))
@@ -43,47 +46,111 @@ const AddRules = () => {
   const constraints = ['greaterThan', 'lessThan', 'greaterThanOrEqual', 'lessThanOrEqual']
   const constraint = ['present', 'notpresent']
 
+  // const handleAddRules = async (event) => {
+  //   try {
+  //     event.preventDefault();
+  //     if (userInfo && userInfo.roles) {
+  //       if (!selectedService || !ruleType) {
+  //         console.error('Error: Please select a service and rule type.');
+  //         setErrorMessage("Please select a Service and Rule Type");
+  //         return;
+  //       }
+
+  //       switch (ruleType) {
+  //         case 'trace':
+  //           if (!duration || !durationConstraint) {
+  //             console.error('Error: Please enter duration and duration constraint for trace rule.');
+  //             setErrorMessage("Please enter Duration and Duration Constraint for Trace rule");
+  //             return;
+  //           }
+  //           break;
+  //         case 'metric':
+  //           if (!memoryLimit || !memoryConstraint || !cpuLimit || !cpuConstraint) {
+  //             console.error('Error: Please enter memory limit, memory constraint, CPU limit, and CPU constraint for metric rule.');
+  //             setErrorMessage("Please enter Memory Limit, Memory Constraint, CPU Limit, and CPU Constraint for Metric rule");
+  //             return;
+  //           }
+  //           break;
+  //         case 'log':
+  //           if (!severityText.length || !severityConstraint) {
+  //             console.error('Error: Please select severity text and severity constraint for log rule.');
+  //             setErrorMessage("Please select Severity Text and Severity Constraint for Log rule");
+  //             return;
+  //           }
+  //           break;
+  //         default:
+  //           console.error('Error: Invalid rule type.');
+  //           setErrorMessage("Invalid Rule Type");
+  //           return;
+  //       }
+
+  //       const dataToSend = {
+  //         serviceName: selectedService,
+  //         roles: userInfo.roles,
+  //         rules: [{
+  //           memoryConstraint: memoryConstraint,
+  //           expiryDateTime: format(expiryDateTime, "yyyy-MM-dd'T'HH:mm:ss"),
+  //           duration: duration,
+  //           cpuLimit: cpuLimit,
+  //           memoryLimit: memoryLimit,
+  //           ruleType: ruleType,
+  //           startDateTime: format(startDateTime, "yyyy-MM-dd'T'HH:mm:ss"),
+  //           cpuConstraint: cpuConstraint,
+  //           durationConstraint: durationConstraint,
+  //           severityText: severityText,
+  //           severityConstraint: severityConstraint
+  //         }]
+  //       }
+
+  //       console.log('Data to send:', dataToSend);
+
+  //     //   await addRulesForService(dataToSend)
+  //     //   .catch(error => {
+  //     //     console.error('Error in response:', error.response);
+  //     //     setErrorMessage(error.response.data)
+  //     //  });
+  //     const response = await addRulesForService(dataToSend);
+
+  //     // Check for success status or handle the response accordingly
+  //     if (response.status === 200 && response.statusText) {
+  //       // Navigate to a different route upon successful addition of rules
+  //       navigate("/admin/clusterDashboard/rulesInfo");
+  //     } else {
+  //       console.error('Error in response:', response);
+  
+  //       // Check if there is a response.data and display it, otherwise show a generic message
+  //       if (response.data && response.data.rules) {
+  //         // If there are rules in the response, it might be a validation error
+  //         const errorMessage = response.data.rules[0].message || "Error adding rules";
+  //         setErrorMessage(errorMessage);
+  //       } else {
+  //         setErrorMessage("Error adding rules");
+  //       }
+  //     }
+  
+  //     } else {
+  //       console.error('Error: userDetails or userDetails.roles is null or undefined');
+  //       setErrorMessage("userDetails or userDetails.roles is null or undefined")
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding rules:', error);
+  //     setErrorMessage(error.response.data)
+  //   }
+  // } 
+
   const handleAddRules = async (event) => {
     try {
       event.preventDefault();
-      if (userDetails && userDetails.roles) {
+      if (userInfo && userInfo.roles) {
         if (!selectedService || !ruleType) {
           console.error('Error: Please select a service and rule type.');
           setErrorMessage("Please select a Service and Rule Type");
           return;
         }
 
-        switch (ruleType) {
-          case 'trace':
-            if (!duration || !durationConstraint) {
-              console.error('Error: Please enter duration and duration constraint for trace rule.');
-              setErrorMessage("Please enter Duration and Duration Constraint for Trace rule");
-              return;
-            }
-            break;
-          case 'metric':
-            if (!memoryLimit || !memoryConstraint || !cpuLimit || !cpuConstraint) {
-              console.error('Error: Please enter memory limit, memory constraint, CPU limit, and CPU constraint for metric rule.');
-              setErrorMessage("Please enter Memory Limit, Memory Constraint, CPU Limit, and CPU Constraint for Metric rule");
-              return;
-            }
-            break;
-          case 'log':
-            if (!severityText.length || !severityConstraint) {
-              console.error('Error: Please select severity text and severity constraint for log rule.');
-              setErrorMessage("Please select Severity Text and Severity Constraint for Log rule");
-              return;
-            }
-            break;
-          default:
-            console.error('Error: Invalid rule type.');
-            setErrorMessage("Invalid Rule Type");
-            return;
-        }
-
         const dataToSend = {
           serviceName: selectedService,
-          roles: userDetails.roles,
+          roles: userInfo.roles,
           rules: [{
             memoryConstraint: memoryConstraint,
             expiryDateTime: format(expiryDateTime, "yyyy-MM-dd'T'HH:mm:ss"),
@@ -98,23 +165,36 @@ const AddRules = () => {
             severityConstraint: severityConstraint
           }]
         }
-
+        await addRulesForService(dataToSend);
         console.log('Data to send:', dataToSend);
+        navigate("/admin/clusterDashboard/rulesInfo");
 
-        await addRulesForService(dataToSend)
-        .catch(error => {
-          console.error('Error in response:', error.response);
-          setErrorMessage(error.response.data)
-       });
+      // // Check for success status or handle the response accordingly
+      // if (response.status === 200 && response.statusText) {
+      //   // Navigate to a different route upon successful addition of rules
+      //   navigate("/admin/clusterDashboard/rulesInfo");
+      // } else {
+      //   console.error('Error in response:', response);
+  
+      //   // Check if there is a response.data and display it, otherwise show a generic message
+      //   if (response.data && response.data.rules) {
+      //     // If there are rules in the response, it might be a validation error
+      //     const errorMessage = response.data.rules[0].message || "Error adding rules";
+      //     setErrorMessage(errorMessage);
+      //   } else {
+      //     setErrorMessage("Error adding rules");
+      //   }
+      // }
+  
       } else {
         console.error('Error: userDetails or userDetails.roles is null or undefined');
         setErrorMessage("userDetails or userDetails.roles is null or undefined")
       }
     } catch (error) {
       console.error('Error adding rules:', error);
-      setErrorMessage("Error adding rules")
+      setErrorMessage(error.response.data)
     }
-  } 
+  }   
 
   const handleStartDateChange = (date) => {
     const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ss");
@@ -146,6 +226,29 @@ const AddRules = () => {
       typeof value === 'string' ? value.split(',') : value,
     );
   }
+
+  const clearFields = () => {
+    if (ruleType !== 'trace') {
+      setDuration(0);
+      setDurationConstraint('');
+    }
+
+    if (ruleType !== 'metric') {
+      setMemoryLimit(0);
+      setMemoryConstraint('');
+      setCpuLimit(0.0);
+      setCpuConstraint('');
+    }
+
+    if (ruleType !== 'log') {
+      setSeverityText([""]);
+      setSeverityConstraint('');
+    }
+  };
+
+  useEffect(() => {
+    clearFields();
+  }, [ruleType]);
 
   return (
     <div>
@@ -258,7 +361,7 @@ const AddRules = () => {
                 style={{ width: "226px", height: "40px", marginBottom: '10px' }}
               >
                 <MenuItem value="" disabled>Select a service</MenuItem>
-                {serviceListData.map((service, index) => (
+                {serviceListDetails.map((service, index) => (
                   <MenuItem key={index} value={service} sx={{ color: 'black'}}>
                     {service}
                   </MenuItem>
