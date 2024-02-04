@@ -19,9 +19,9 @@ export const keycloakLoginAuth = async (userAuth) => {
         const keycloakInstance = await axios.post(`${SSO_BASE_URL}/token`, data, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                // 'Access-Control-Allow-Origin': '*',
-                // 'Access-Control-Allow-Credentials': true,
-                // 'Access-Control-Allow-Headers': "*"
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Credentials': true,
+                'Access-Control-Allow-Headers': "*"
 
             },
         });
