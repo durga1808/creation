@@ -71,7 +71,7 @@ const AddCluster = () => {
 
     // Add your form submission logic here
     console.log('Form submitted:', ClusterPayload);
-    navigate("/admin")
+    navigate("/admin/adminMainpage")
   };
 
 

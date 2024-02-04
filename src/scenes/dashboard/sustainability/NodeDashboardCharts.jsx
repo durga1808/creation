@@ -109,7 +109,7 @@ const NodeDashboardCharts = () => {
     useEffect(() => {
         // setPowerMetrics(keplerContainerInfo);
         setKeplerActiveTab(1);
-        setNavActiveTab(1);
+        // setNavActiveTab(1);
         // createPodMetricData(keplerContainerInfoContainer);
         fetchPowerMetrics();
         return () => {

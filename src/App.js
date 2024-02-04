@@ -112,7 +112,7 @@ function App() {
       <div>
         <AdminTopBar />
         <Routes>
-          <Route path="adminpage" element={<AdminMainPage />} />
+          <Route path="adminMainpage" element={<AdminMainPage />} />
           <Route path="addCluster" element={<AddCluster />} />
           <Route path="addRules" element={<AddRules />} />
           <Route

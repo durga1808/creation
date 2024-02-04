@@ -119,7 +119,7 @@ const PodDashboardCharts = () => {
     useEffect(() => {
         // setPowerMetrics(keplerContainerInfo);
         setKeplerActiveTab(0);
-        setNavActiveTab(1);
+        // setNavActiveTab(1);
         // createPodMetricData(keplerContainerInfoContainer);
         fetchPowerMetrics();
         return () => {

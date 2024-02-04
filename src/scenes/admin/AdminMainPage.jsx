@@ -113,10 +113,10 @@ const AdminTopBar = () => {
     );
     console.log("infooo", ClusterLoginInfo);
     if (ClusterLoginInfo === "Login successful!") {
-      navigate("/admin/clusterDashboard/*");
-      setTimeout(() => {
-        alert("Login Successfull !!!");
-      }, 1000);
+      navigate("/admin/clusterDashboard");
+      // setTimeout(() => {
+      //   alert("Login Successfull !!!");
+      // }, 1000);
     } else if (ClusterLoginInfo === "Incorrect username or password.") {
       alert("Incorrect username or password.");
     } else {
@@ -128,44 +128,11 @@ const AdminTopBar = () => {
     navigate("/");
   };
 
-  // 091365
+
 
   return (
     <div>
-      {/* <AppBar position="static">
-        <Toolbar
-          sx={{
-            backgroundColor: "#00888C",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div style={{display:"flex"}}>
-            <img
-              src={logo}
-              alt="Logo"
-              style={{
-                width: "60px",
-                height: "27px",
-                marginRight: "20px",
-              }}
-            />
-            <Typography
-              sx={{
-                color: "#FFF",
-                borderLeft: "4px solid white",
-                paddingLeft: "20px",
-                fontWeight: "bold",
-              }}
-              variant="h3"
-              fontWeight="500"
-              marginLeft={1}
-            >
-              Cluster Management
-            </Typography>
-          </div>
-        </Toolbar>
-      </AppBar> */}
+     
       <div style={{display:"flex",justifyContent:"flex-end",marginTop:"10px"}} >
             <Button
               variant="contained"

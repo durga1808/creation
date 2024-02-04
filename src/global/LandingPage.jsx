@@ -110,6 +110,8 @@ import { isTokenExpired, logout } from "./AuthMechanism";
       }
     }
 
+   
+
     const handleSustainability = () => {
       if (authenticated) {
         navigate("/mainpage/sustainability");
@@ -125,7 +127,7 @@ import { isTokenExpired, logout } from "./AuthMechanism";
       if (authenticated) {
         // If the user is authenticated
         if (userRole.includes("admin") ) {
-          navigate("/admin");
+          navigate("/admin/adminMainpage");
         } else {
           navigate("/notAuth");
         }
@@ -258,7 +260,7 @@ import { isTokenExpired, logout } from "./AuthMechanism";
                      color="info" 
                      onClick={handleInfra}
                     >
-                      Open Observability
+                      Open Infrastructure
                     </Button>
                   </CardActions>
                 </Card>

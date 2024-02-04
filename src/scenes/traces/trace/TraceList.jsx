@@ -376,7 +376,7 @@ const TraceList = () => {
     setLogRender(false);
     setMetricRender(false);
     setLogSummaryService([]);
-    setNavActiveTab(2);
+    setNavActiveTab(1);
     setApmActiveTab(0);
     if (needFilterCall) {
       filterApiCall();
@@ -426,7 +426,7 @@ const TraceList = () => {
         setClearLogFilter(true);
         setNeedLogFilterCall(false);
         setSelectedLogService([]);
-        setNavActiveTab(3);
+        setNavActiveTab(1);
       } else {
         setTraceToLogError("No Log for this TraceId!");
       }
