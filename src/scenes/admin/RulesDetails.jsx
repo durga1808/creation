@@ -69,9 +69,11 @@ function Row({ row }) {
   
     if (property === "severityText") {
       const severityArray = value.split(',').map(item => item.trim().toUpperCase());
+      const filteredSeverityArray = severityArray.filter(item => item !== "");
+
       updatedRules[index] = {
         ...updatedRules[index],
-        [property]: severityArray,
+        [property]: filteredSeverityArray,
       };
     } else {
       updatedRules[index] = { ...updatedRules[index], [property]: value };

@@ -89,17 +89,35 @@ import { isTokenExpired, logout } from "./AuthMechanism";
       navigate("/");
       setAuthenticated(false)
     };
-  
+
     const handleobservability = () => {
-      navigate(authenticated ? "/mainpage/dashboard" : "/notAuth");
-    };
-  
+      if (authenticated) {
+        navigate("/mainpage/dashboard");
+      } else if (authenticated && !userRole.includes("admin")) {
+        navigate("/notAuth");
+      } else {
+        navigate("/login");
+      }
+    }
+
     const handleInfra = () => {
-      navigate(authenticated ? "/mainpage/apm" : "/notAuth");
+      if (authenticated) {
+        navigate("/mainpage/apm");
+      } else if (authenticated && !userRole.includes("admin")) {
+        navigate("/notAuth");
+      } else {
+        navigate("/login");
+      }
     }
 
     const handleSustainability = () => {
-      navigate(authenticated ? "/mainpage/sustainability" : "/notAuth");
+      if (authenticated) {
+        navigate("/mainpage/sustainability");
+      } else if (authenticated && !userRole.includes("admin")) {
+        navigate("/notAuth");
+      } else {
+        navigate("/login");
+      }
     }
 
     const handleAdminPage = () => {
@@ -112,7 +130,7 @@ import { isTokenExpired, logout } from "./AuthMechanism";
           navigate("/notAuth");
         }
       } else {
-        navigate("/notAuth");
+        navigate("/login");
       }
     }  
 

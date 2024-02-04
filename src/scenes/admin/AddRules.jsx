@@ -20,10 +20,14 @@ const AddRules = () => {
   const [memoryLimit, setMemoryLimit] = useState(0);
   const [ruleType, setRuleType] = useState("trace");
   const [startDateTime, setStartDateTime] = useState(new Date());
-  const [cpuConstraint, setCpuConstraint] = useState('');
-  const [durationConstraint, setDurationConstraint] = useState('');
+  const [cpuConstraint, setCpuConstraint] = useState("");
+  const [durationConstraint, setDurationConstraint] = useState("");
   const [severityText, setSeverityText] = useState([]);
-  const [severityConstraint, setSeverityConstraint] = useState('');
+  const [severityConstraint, setSeverityConstraint] = useState("");
+  const [cpuAlertSeverityText, setCpuAlertSeverityText] = useState("");
+  const [memoryAlertSeverityText, setMemoryAlertSeverityText] = useState("");
+  const [tracecAlertSeverityText, setTracecAlertSeverityText] = useState("");
+  const [logAlertSeverityText, setLogAlertSeverityText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   // const [maxEndDate, setMaxEndDate] = useState(false);
 
@@ -45,98 +49,7 @@ const AddRules = () => {
   const severityChanges = ['ERROR', 'SEVERE', 'WARN', 'INFO']
   const constraints = ['greaterThan', 'lessThan', 'greaterThanOrEqual', 'lessThanOrEqual']
   const constraint = ['present', 'notpresent']
-
-  // const handleAddRules = async (event) => {
-  //   try {
-  //     event.preventDefault();
-  //     if (userInfo && userInfo.roles) {
-  //       if (!selectedService || !ruleType) {
-  //         console.error('Error: Please select a service and rule type.');
-  //         setErrorMessage("Please select a Service and Rule Type");
-  //         return;
-  //       }
-
-  //       switch (ruleType) {
-  //         case 'trace':
-  //           if (!duration || !durationConstraint) {
-  //             console.error('Error: Please enter duration and duration constraint for trace rule.');
-  //             setErrorMessage("Please enter Duration and Duration Constraint for Trace rule");
-  //             return;
-  //           }
-  //           break;
-  //         case 'metric':
-  //           if (!memoryLimit || !memoryConstraint || !cpuLimit || !cpuConstraint) {
-  //             console.error('Error: Please enter memory limit, memory constraint, CPU limit, and CPU constraint for metric rule.');
-  //             setErrorMessage("Please enter Memory Limit, Memory Constraint, CPU Limit, and CPU Constraint for Metric rule");
-  //             return;
-  //           }
-  //           break;
-  //         case 'log':
-  //           if (!severityText.length || !severityConstraint) {
-  //             console.error('Error: Please select severity text and severity constraint for log rule.');
-  //             setErrorMessage("Please select Severity Text and Severity Constraint for Log rule");
-  //             return;
-  //           }
-  //           break;
-  //         default:
-  //           console.error('Error: Invalid rule type.');
-  //           setErrorMessage("Invalid Rule Type");
-  //           return;
-  //       }
-
-  //       const dataToSend = {
-  //         serviceName: selectedService,
-  //         roles: userInfo.roles,
-  //         rules: [{
-  //           memoryConstraint: memoryConstraint,
-  //           expiryDateTime: format(expiryDateTime, "yyyy-MM-dd'T'HH:mm:ss"),
-  //           duration: duration,
-  //           cpuLimit: cpuLimit,
-  //           memoryLimit: memoryLimit,
-  //           ruleType: ruleType,
-  //           startDateTime: format(startDateTime, "yyyy-MM-dd'T'HH:mm:ss"),
-  //           cpuConstraint: cpuConstraint,
-  //           durationConstraint: durationConstraint,
-  //           severityText: severityText,
-  //           severityConstraint: severityConstraint
-  //         }]
-  //       }
-
-  //       console.log('Data to send:', dataToSend);
-
-  //     //   await addRulesForService(dataToSend)
-  //     //   .catch(error => {
-  //     //     console.error('Error in response:', error.response);
-  //     //     setErrorMessage(error.response.data)
-  //     //  });
-  //     const response = await addRulesForService(dataToSend);
-
-  //     // Check for success status or handle the response accordingly
-  //     if (response.status === 200 && response.statusText) {
-  //       // Navigate to a different route upon successful addition of rules
-  //       navigate("/admin/clusterDashboard/rulesInfo");
-  //     } else {
-  //       console.error('Error in response:', response);
-  
-  //       // Check if there is a response.data and display it, otherwise show a generic message
-  //       if (response.data && response.data.rules) {
-  //         // If there are rules in the response, it might be a validation error
-  //         const errorMessage = response.data.rules[0].message || "Error adding rules";
-  //         setErrorMessage(errorMessage);
-  //       } else {
-  //         setErrorMessage("Error adding rules");
-  //       }
-  //     }
-  
-  //     } else {
-  //       console.error('Error: userDetails or userDetails.roles is null or undefined');
-  //       setErrorMessage("userDetails or userDetails.roles is null or undefined")
-  //     }
-  //   } catch (error) {
-  //     console.error('Error adding rules:', error);
-  //     setErrorMessage(error.response.data)
-  //   }
-  // } 
+  const severityTextRule = ['CRITICAL', 'WARNING', 'INFO']
 
   const handleAddRules = async (event) => {
     try {
@@ -162,7 +75,11 @@ const AddRules = () => {
             cpuConstraint: cpuConstraint,
             durationConstraint: durationConstraint,
             severityText: severityText,
-            severityConstraint: severityConstraint
+            severityConstraint: severityConstraint,
+            cpuAlertSeverityText: cpuAlertSeverityText,
+            memoryAlertSeverityText: memoryAlertSeverityText,
+            tracecAlertSeverityText: tracecAlertSeverityText,
+            logAlertSeverityText: logAlertSeverityText
           }]
         }
         await addRulesForService(dataToSend);
@@ -230,19 +147,23 @@ const AddRules = () => {
   const clearFields = () => {
     if (ruleType !== 'trace') {
       setDuration(0);
-      setDurationConstraint('');
+      setDurationConstraint("");
+      setTracecAlertSeverityText("");
     }
 
     if (ruleType !== 'metric') {
       setMemoryLimit(0);
-      setMemoryConstraint('');
+      setMemoryConstraint("");
       setCpuLimit(0.0);
-      setCpuConstraint('');
+      setCpuConstraint("");
+      setMemoryAlertSeverityText("");
+      setCpuAlertSeverityText("");
     }
 
     if (ruleType !== 'log') {
-      setSeverityText([""]);
-      setSeverityConstraint('');
+      setSeverityText([]);
+      setSeverityConstraint("");
+      setLogAlertSeverityText("");
     }
   };
 
@@ -419,6 +340,27 @@ const AddRules = () => {
                     ))}
                   </Select>
                 </div>
+
+                <div style={{ display: "flex", flexDirection: "column", marginLeft: "5px" }}>
+                  <label
+                      style={{
+                        fontSize: "12px"
+                      }}>
+                        Trace Alert Severity
+                    </label>
+                    <Select
+                      value={tracecAlertSeverityText}
+                      onChange={(e) => setTracecAlertSeverityText(e.target.value)}
+                      style={{ width: "226px", marginBottom: "10px" }}
+                    >
+                      <MenuItem value="" disabled>Select Trace Alert Severity</MenuItem>
+                      {severityTextRule.map((traceSeverity, index) => (
+                        <MenuItem key={index} value={traceSeverity} sx={{ color: 'black'}}>
+                          {traceSeverity}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                </div>
                 </>
               )}
 
@@ -454,6 +396,27 @@ const AddRules = () => {
                   </Select>
                 </div>
 
+                <div style={{ display: "flex", flexDirection: "column", marginLeft: "5px" }}>
+                  <label
+                    style={{
+                      fontSize: "12px"
+                    }}>
+                      Memory Alert Severity
+                  </label>
+                  <Select
+                    value={memoryAlertSeverityText}
+                    onChange={(e) => setMemoryAlertSeverityText(e.target.value)}
+                    style={{ width: "226px", marginBottom: "10px" }}
+                  >
+                    <MenuItem>Select Memory Alert Severity</MenuItem>
+                    {severityTextRule.map((memorySeverity, index) => (
+                      <MenuItem key={index} value={memorySeverity} sx={{ color: 'black'}}>
+                        {memorySeverity}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
+
                 <TextField
                   required
                   id="filled-required"
@@ -479,6 +442,27 @@ const AddRules = () => {
                     {constraints.map((constraintCpu, index) => (
                       <MenuItem key={index} value={constraintCpu} sx={{ color: 'black'}}>
                         {constraintCpu}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", marginLeft: "5px" }}>
+                  <label
+                    style={{
+                      fontSize: "12px"
+                    }}>
+                      CPU Alert Severity
+                  </label>
+                  <Select
+                    value={cpuAlertSeverityText}
+                    onChange={(e) => setCpuAlertSeverityText(e.target.value)}
+                    style={{ width: "226px", marginBottom: "10px" }}
+                  >
+                    <MenuItem>Select CPU Alert Severity</MenuItem>
+                    {severityTextRule.map((cpuSeverity, index) => (
+                      <MenuItem key={index} value={cpuSeverity} sx={{ color: 'black' }}>
+                        {cpuSeverity}
                       </MenuItem>
                     ))}
                   </Select>
@@ -529,6 +513,27 @@ const AddRules = () => {
                       </MenuItem>
                     ))}
                   </Select>  
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", marginLeft: "5px" }}>
+                  <label 
+                    style={{
+                      fontSize: "12px"
+                    }}>
+                      Log Alert Severity
+                  </label>
+                  <Select
+                    value={logAlertSeverityText}
+                    onChange={(e) => setLogAlertSeverityText(e.target.value)}
+                    style={{ width: "226px", marginBottom: "10px" }}
+                  >
+                    <MenuItem>Select Log Alert Severity</MenuItem>
+                    {severityTextRule.map((logSeverity, index) => (
+                      <MenuItem key={index} value={logSeverity} sx={{ color: 'black' }}>
+                        {logSeverity}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </div>
                 </>
               )}
