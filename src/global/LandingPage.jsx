@@ -96,8 +96,8 @@ import { isTokenExpired, logout } from "./AuthMechanism";
 
   
     const handleInfra = () => {
-      navigate(authenticated ? "/mainpage/dashboard" : "/notAuth");
-      // navigate("/notAuth");
+      // navigate(authenticated ? "/mainpage/apm" : "/notAuth");
+      navigate("/notAuth");
     }
 
    

@@ -511,9 +511,9 @@ const DashboardTopBar = () => {
                 textColor="inherit"
                 indicatorColor="primary"
               >
-                <Tab label="APM Dashboard" sx={{ color: "#FFF" }} />
+                <Tab label="Observability" sx={{ color: "#FFF" }} />
 
-                <Tab label="APM Telemetry Data" sx={{ color: "#FFF" }} />
+                <Tab label="APM" sx={{ color: "#FFF" }} />
               </Tabs>
             ) : 
             (
