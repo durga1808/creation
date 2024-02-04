@@ -113,7 +113,7 @@ const AdminTopBar = () => {
     );
     console.log("infooo", ClusterLoginInfo);
     if (ClusterLoginInfo === "Login successful!") {
-      navigate("/admin/clusterDashboard/*");
+      navigate("/admin/clusterDashboard");
       // setTimeout(() => {
       //   alert("Login Successfull !!!");
       // }, 1000);
