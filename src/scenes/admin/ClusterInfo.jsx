@@ -133,7 +133,7 @@ const ClusterInfo = () => {
     <div>
       <LoadingOverlay
       active={InstrumentLoading}
-      spinner={<FadeLoader color="white" />}
+      spinner={<FadeLoader style={{marginLeft:"20px"}} color="white" />}
       styles={{
         overlay: (base) => ({
           ...base,
