@@ -110,8 +110,6 @@ import { isTokenExpired, logout } from "./AuthMechanism";
       }
     }
 
-   
-
     const handleSustainability = () => {
       if (authenticated) {
         navigate("/mainpage/sustainability");
@@ -144,7 +142,7 @@ import { isTokenExpired, logout } from "./AuthMechanism";
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginBottom: "110px",
+          marginBottom: "80px",
         }}
       >
 
@@ -161,19 +159,31 @@ import { isTokenExpired, logout } from "./AuthMechanism";
           />
         </div>
 
-        <div
-          style={{ marginLeft: "10px" }}>
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", width: "150px" }}>
+          <div style={{ marginTop: "8px"}}>
+            {authenticated && (
+              // Display username only when authenticated
+              <Typography variant="h6">
+                User: {userInfo.username}
+              </Typography>
+            )}
+          </div>  
+
           {authenticated ? (
             <IconButton onClick={handleLogout}>
-            <LogoutIcon />
+            <LogoutIcon style={{ fontSize: "20px" }} />
           </IconButton>
           ) : (
             <IconButton onClick={handlelogin}>
-            <LoginIcon />
+            <LoginIcon style={{ fontSize: "20px" }} />
           </IconButton>
           )}
           
         </div>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: "30px" }}>
+        <Typography variant="h4">Knative Observability Platform - One Place where you can observe both Application and Infrastructure</Typography>
       </div>
   
         <Box
