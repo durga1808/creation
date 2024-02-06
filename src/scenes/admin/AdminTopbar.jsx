@@ -27,8 +27,8 @@ const AdminTopbar = () => {
               src={logo}
               alt="Logo"
               style={{
-                width: "60px",
-                height: "27px",
+                width: "90px",
+                height: "37px",
                 marginRight: "20px",
               }}
             />

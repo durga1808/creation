@@ -296,7 +296,7 @@ const AdminTopBar = () => {
                             )
                         }
                       >
-                        Open
+                        View
                       </Button>
                       <Button
                         sx={{

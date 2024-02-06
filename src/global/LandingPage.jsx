@@ -195,7 +195,7 @@ const LandingPage = () => {
                 <LogoutIcon style={{ fontSize: "20px", color: "#FFF" ,marginRight:"15px"}} />
               </IconButton>
             ) : (
-              <IconButton onClick={handlelogin}>
+              <IconButton onClick={handleLogin}>
                 <LoginIcon style={{ fontSize: "20px", color: "#FFF",marginRight:"15px" }} />
               </IconButton>
             )}
