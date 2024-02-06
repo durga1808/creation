@@ -15,6 +15,7 @@ import {
   Box,
 } from "@mui/material";
 import {
+  deleteClusterDetails,
   getClusterDetails,
   loginUser,
   openshiftClusterLogin,
@@ -31,8 +32,19 @@ const AdminTopBar = () => {
   const [editedPassword, setEditedPassword] = useState("");
   const [editedClusterType, setEditedClusterType] = useState("");
   const [editedHostURL, setEditedHostURL] = useState("");
+  const [deleted,SetDeleted] = useState(false);
+
+
+  const handleDeleteRow = async(clusterId,clusterUsername) => {
+ 
+    await deleteClusterDetails(clusterId,clusterUsername);
+    SetDeleted(!deleted);
+    
+  };
 
   useEffect(() => {
+
+    console.log("useeffet called");
     const userDetails = JSON.parse(localStorage.getItem("userInfo"));
     const payload = {
       username: userDetails.username,
@@ -54,13 +66,11 @@ const AdminTopBar = () => {
 
     // Call the async function immediately
     fetchData();
-  }, [editableRowId]);
+  }, [editableRowId,deleted]);
 
   const handleAddCluster = () => {
     navigate("/admin/addCluster");
   };
-
-
 
   const handleEditRow = (
     rowId,
@@ -75,6 +85,8 @@ const AdminTopBar = () => {
     setEditedClusterType(currentClusterType);
     setEditedHostURL(currentHostURL);
   };
+
+ 
 
   const handleSaveRow = async () => {
     // Implement logic to save the edited row data
@@ -124,44 +136,29 @@ const AdminTopBar = () => {
     }
   };
 
-  const handleHomepage = () => {
-    navigate("/");
-  };
-
-
-
   return (
     <div>
-     
-      <div style={{display:"flex",justifyContent:"flex-end",marginTop:"10px"}} >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleHomepage}
-              sx={{
-                fontWeight:"bold",
-                backgroundColor: "lightgray",
-                marginRight: "20px",
-                "&:hover": { backgroundColor: "lightgray" },
-              }}
-            >
-              Home
-            </Button>
-           
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddCluster}
-              sx={{
-                fontWeight:"bold",
-                backgroundColor: "lightgray",
-                marginRight: "20px",
-                "&:hover": { backgroundColor: "lightgray" },
-              }}
-            >
-              Add Cluster
-            </Button>
-          </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: "10px",
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddCluster}
+          sx={{
+            fontWeight: "bold",
+            backgroundColor: "lightgray",
+            marginRight: "20px",
+            "&:hover": { backgroundColor: "lightgray" },
+          }}
+        >
+          Add Cluster
+        </Button>
+      </div>
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
         <Table>
           <TableHead sx={{ backgroundColor: "#00888C" }}>
@@ -264,6 +261,21 @@ const AdminTopBar = () => {
                       >
                         Save
                       </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                          marginLeft: "10px",
+                          backgroundColor: "lightgrey",
+                          marginRight: "20px",
+                          "&:hover": { backgroundColor: "lightgrey" },
+                        }}
+                        onClick={() =>
+                          handleDeleteRow(row.clusterId, row.clusterUsername)
+                        }
+                      >
+                        Delete
+                      </Button>
                     </>
                   ) : (
                     <>
@@ -282,7 +294,6 @@ const AdminTopBar = () => {
                               row.clusterPassword,
                               row.clusterUsername
                             )
-                          // openshiftClusterLogin
                         }
                       >
                         Open
@@ -307,6 +318,21 @@ const AdminTopBar = () => {
                         }
                       >
                         Edit
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                          marginLeft: "10px",
+                          backgroundColor: "lightgrey",
+                          marginRight: "20px",
+                          "&:hover": { backgroundColor: "lightgrey" },
+                        }}
+                        onClick={() =>
+                          handleDeleteRow(row.clusterId, row.clusterUsername)
+                        }
+                      >
+                        Delete
                       </Button>
                     </>
                   )}

@@ -71,7 +71,9 @@ const GlobalContextProvider = ({ children }) => {
 
   const [logSelectedService, setLogSelectedService] = useState([]);
   const [selectedSeverity, setSelectedSeverity] = useState([]);
-
+const [InfraActiveTab,setInfraActiveTab] = useState(0);
+const [InfraPodActiveTab,setInfraPodActiveTab] = useState(0);
+const [InfraNodeActiveTab,setInfraNodeActiveTab] = useState(0);
   const [keplerActiveTab, setKeplerActiveTab] = useState(0);
   const [apmActiveTab, setApmActiveTab] = useState(0);
   const [keplerCurrentPage, setKeplerCurrentPage] = useState(1);
@@ -209,6 +211,12 @@ const GlobalContextProvider = ({ children }) => {
         setKeplerActiveTab,
         apmActiveTab,
         setApmActiveTab,
+        InfraActiveTab,
+        setInfraActiveTab,
+        InfraPodActiveTab,
+        setInfraPodActiveTab,
+        InfraNodeActiveTab,
+        setInfraNodeActiveTab,
         keplerCurrentPage,
         setKeplerCurrentPage,
         nodeCurrentPage,

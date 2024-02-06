@@ -18,6 +18,7 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
+  Button,
 } from "@mui/material";
 import { Brightness4, Brightness7, Person } from "@mui/icons-material";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -33,6 +34,7 @@ import { useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { isTokenExpired, logout } from "./AuthMechanism";
 import { useTokenExpirationCheck } from "./TokenExpiry";
+import HomeIcon from '@mui/icons-material/Home';
 
 function Topbar() {
   const navigate = useNavigate();
@@ -40,6 +42,7 @@ function Topbar() {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const colors = tokens(theme.palette.mode);
+
   const colorMode = useContext(ColorModeContext);
   const {
     setMetricRender,
@@ -55,7 +58,6 @@ function Topbar() {
   //   checkTokenExpiration();
   // }, [checkTokenExpiration]);
 
-
   const handleIconClick = (event) => {
     setAnchorEl(event.currentTarget);
     setNotificationCount(0);
@@ -68,45 +70,45 @@ function Topbar() {
   const open = Boolean(anchorEl);
   const id = open ? "notification-popover" : undefined;
 
-    // const handleLogout = () => {
-    //   localStorage.setItem("loggedOut",true);
-    //   logout();
-    //   navigate("/");
-    // };
+  // const handleLogout = () => {
+  //   localStorage.setItem("loggedOut",true);
+  //   logout();
+  //   navigate("/");
+  // };
 
-    const handleLogout = async () => {
-      // Check if the token is expired
-      const accessToken = localStorage.getItem("accessToken");
-      if (accessToken && isTokenExpired(accessToken)) {
-        // Token is expired, clear local storage and navigate to the home page
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("roles");
-        localStorage.removeItem("userInfo");
-        navigate("/");
-        return;
-      }
-  
-      // Set a flag to indicate that the user has logged out
-      localStorage.setItem("loggedOut", true);
-  
-      try {
-        // Attempt to call the Keycloak logout API
-        await logout();
-      } catch (error) {
-        // Handle errors from the logout API call
-        console.error("Logout request failed:", error);
-      }
-  
-      // Clear tokens from localStorage (even if Keycloak logout API fails)
+  const handleLogout = async () => {
+    // Check if the token is expired
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken && isTokenExpired(accessToken)) {
+      // Token is expired, clear local storage and navigate to the home page
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("roles");
       localStorage.removeItem("userInfo");
-  
-      // Navigate to the home page
       navigate("/");
-    };  
+      return;
+    }
+
+    // Set a flag to indicate that the user has logged out
+    localStorage.setItem("loggedOut", true);
+
+    try {
+      // Attempt to call the Keycloak logout API
+      await logout();
+    } catch (error) {
+      // Handle errors from the logout API call
+      console.error("Logout request failed:", error);
+    }
+
+    // Clear tokens from localStorage (even if Keycloak logout API fails)
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("roles");
+    localStorage.removeItem("userInfo");
+
+    // Navigate to the home page
+    navigate("/");
+  };
 
   const appBarStyles = {
     height: "50px",
@@ -126,8 +128,12 @@ function Topbar() {
     setSelectedOption(option);
   };
 
-  console.log("slectedoption", selectedOption);
-  console.log("alertmessage", alertResponse[selectedOption]);
+  // console.log("slectedoption", selectedOption);
+  // console.log("alertmessage", alertResponse[selectedOption]);
+
+  const handleHomepage = () => {
+    navigate("/");
+  };
 
   return (
     <div>
@@ -177,9 +183,24 @@ function Topbar() {
             </IconButton>
             <span style={{ color: colors.tabColor[500] }}>User: {user}</span> */}
               <div style={{ marginLeft: "20px" }}>
-                <IconButton aria-label="Account" onClick={handleLogout}>
+                {/* <IconButton aria-label="Account" onClick={handleLogout}>
                   <LogoutIcon style={{ fontSize: "20px", color: "#FFF" }} />
-                </IconButton>
+                </IconButton> */}
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleHomepage}
+                  sx={{
+                    color: "black",
+                    fontWeight: "bold",
+                    backgroundColor: "white",
+                    marginRight: "20px",
+                    "&:hover": { backgroundColor: "white" },
+                  }}
+                >
+                  Portal Home
+                </Button>
               </div>
             </Box>
           </Toolbar>
@@ -270,7 +291,7 @@ function Topbar() {
             <IconButton style={{ marginLeft: "5px" }}>
               <Person style={{ fontSize: "20px", color: "#FFF" }} />
             </IconButton>
-            <span style={{ color: colors.tabColor[500], marginRight: "5px" }}>
+            <span style={{ color: colors.tabColor[500], marginRight: "5px",paddingTop:"5px" }}>
               User: {user}
             </span>
             <IconButton onClick={handleIconClick}>
@@ -297,7 +318,10 @@ function Topbar() {
                 <Accordion
                   style={{
                     width: "430px",
-                    backgroundColor:theme.palette.mode ==="dark"?"gray": colors.primary[400],
+                    backgroundColor:
+                      theme.palette.mode === "dark"
+                        ? "gray"
+                        : colors.primary[400],
                   }}
                 >
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -319,7 +343,11 @@ function Topbar() {
                                   lineHeight: "1",
                                   backgroundColor: "white",
                                   // color:"black"
-                                  color:data.alertData.includes("Critical Alert")?"red":"black",
+                                  color: data.alertData.includes(
+                                    "Critical Alert"
+                                  )
+                                    ? "red"
+                                    : "black",
                                 }}
                               >
                                 {data.alertData}
@@ -331,7 +359,9 @@ function Topbar() {
                           ))}
                         </>
                       ) : (
-                        <div style={{color:"#000"}}>There is no metric alert</div>
+                        <div style={{ color: "#000" }}>
+                          There is no metric alert
+                        </div>
                       )}
                     </FormGroup>
                   </AccordionDetails>
@@ -342,7 +372,10 @@ function Topbar() {
                 <Accordion
                   style={{
                     width: "430px",
-                    backgroundColor:theme.palette.mode ==="dark"?"gray": colors.primary[400],
+                    backgroundColor:
+                      theme.palette.mode === "dark"
+                        ? "gray"
+                        : colors.primary[400],
                   }}
                 >
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -364,7 +397,11 @@ function Topbar() {
                                   lineHeight: "1",
                                   backgroundColor: "white",
                                   // color:"red"
-                                  color:data.alertData.includes("Critical Alert")?"red":"black",
+                                  color: data.alertData.includes(
+                                    "Critical Alert"
+                                  )
+                                    ? "red"
+                                    : "black",
                                 }}
                               >
                                 {data.alertData}
@@ -376,7 +413,9 @@ function Topbar() {
                           ))}
                         </>
                       ) : (
-                        <div style={{color:"#000"}}>There is no trace alert</div>
+                        <div style={{ color: "#000" }}>
+                          There is no trace alert
+                        </div>
                       )}
                     </FormGroup>
                   </AccordionDetails>
@@ -387,7 +426,10 @@ function Topbar() {
                 <Accordion
                   style={{
                     width: "430px",
-                    backgroundColor:theme.palette.mode ==="dark"?"gray": colors.primary[400],
+                    backgroundColor:
+                      theme.palette.mode === "dark"
+                        ? "gray"
+                        : colors.primary[400],
                   }}
                 >
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -409,7 +451,11 @@ function Topbar() {
                                   lineHeight: "1",
                                   backgroundColor: "white",
                                   // color:"black"
-                                  color:data.alertData.includes("Critical Alert")?"red":"black",
+                                  color: data.alertData.includes(
+                                    "Critical Alert"
+                                  )
+                                    ? "red"
+                                    : "black",
                                 }}
                               >
                                 {data.alertData}
@@ -421,7 +467,9 @@ function Topbar() {
                           ))}
                         </>
                       ) : (
-                        <div style={{color:"#000"}}>There is no log alert</div>
+                        <div style={{ color: "#000" }}>
+                          There is no log alert
+                        </div>
                       )}
                     </FormGroup>
                   </AccordionDetails>
@@ -530,9 +578,10 @@ function Topbar() {
                 )}
               </>
             </Popover> */}
-            <div style={{ marginLeft: "0px" }}>
-              <IconButton aria-label="Account" onClick={handleLogout}>
-                <LogoutIcon style={{ fontSize: "20px", color: "#FFF" }} />
+            <div style={{ marginLeft: "5px",marginTop:"5px" }}>
+                <span style={{color:"white"}}>Home</span>
+                <IconButton aria-label="Account" onClick={handleHomepage}>
+                <HomeIcon style={{ fontSize: "20px", color: "#FFF",marginBottom:"5px" }} />
               </IconButton>
             </div>
           </Toolbar>

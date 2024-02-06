@@ -137,6 +137,21 @@ export const updateClusterDetails = async (UpdatedClusterData) => {
 };
 
 
+export const deleteClusterDetails = async (clusterId,clusterUsername) => {
+  try {
+    console.log("deleted api data",clusterId, clusterUsername);
+  
+    const response = await axios.delete(`${loginURL}/${clusterUsername}/delete-environments/${clusterId}?clusterId=${clusterId}&clusterUsername=${clusterUsername}`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error in update Cluster User:", error);
+    throw error;
+  }
+};
+
+
+
 export const getClusterDetails = async () => {
   try {
     const response = await axios.get(`${loginURL}/register`);
