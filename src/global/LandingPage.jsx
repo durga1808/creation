@@ -51,7 +51,7 @@ import { isTokenExpired, logout } from "./AuthMechanism";
       }
     }, [memoizedCheckTokenExpiration]);
   
-    const handlelogin = () => {
+    const handleLogin = () => {
       navigate("/login");
     };
 
@@ -90,11 +90,13 @@ import { isTokenExpired, logout } from "./AuthMechanism";
       setAuthenticated(false)
     };
 
-    const handleobservability = () => {
+    const handleObservability = () => {
       if (authenticated) {
-        navigate("/mainpage/dashboard");
-      } else if (authenticated && !userRole.includes("admin")) {
-        navigate("/notAuth");
+        if ((userRole.includes("admin") || userRole.includes("vendor") || userRole.includes("apm"))) {
+          navigate("/mainpage/dashboard");
+        } else {
+          navigate("/notAuth");
+        }
       } else {
         navigate("/login");
       }
@@ -102,9 +104,11 @@ import { isTokenExpired, logout } from "./AuthMechanism";
 
     const handleInfra = () => {
       if (authenticated) {
-        navigate("/mainpage/apm");
-      } else if (authenticated && !userRole.includes("admin")) {
-        navigate("/notAuth");
+        if ((userRole.includes("admin") || userRole.includes("vendor") || userRole.includes("infra"))) {
+          navigate("/mainpage/apm");
+        } else {
+          navigate("/notAuth");
+        }
       } else {
         navigate("/login");
       }
@@ -112,13 +116,15 @@ import { isTokenExpired, logout } from "./AuthMechanism";
 
     const handleSustainability = () => {
       if (authenticated) {
-        navigate("/mainpage/sustainability");
-      } else if (authenticated && !userRole.includes("admin")) {
-        navigate("/notAuth");
+        if ((userRole.includes("admin") || userRole.includes("vendor") || userRole.includes("sustainability"))) {
+          navigate("/mainpage/sustainability");
+        } else {
+          navigate("/notAuth");
+        }
       } else {
         navigate("/login");
       }
-    }
+    }  
 
     const handleAdminPage = () => {
       // navigate(authenticated ? "/admin" : "/notAuth");
@@ -132,7 +138,7 @@ import { isTokenExpired, logout } from "./AuthMechanism";
       } else {
         navigate("/login");
       }
-    }  
+    }
 
   return (
     <div style={{ margin: "30px", display: "flex", flexDirection: "column" }}>
@@ -174,7 +180,7 @@ import { isTokenExpired, logout } from "./AuthMechanism";
             <LogoutIcon style={{ fontSize: "20px" }} />
           </IconButton>
           ) : (
-            <IconButton onClick={handlelogin}>
+            <IconButton onClick={handleLogin}>
             <LoginIcon style={{ fontSize: "20px" }} />
           </IconButton>
           )}
@@ -230,7 +236,7 @@ import { isTokenExpired, logout } from "./AuthMechanism";
                     <Button
                       size="small"
                       color="info"
-                      onClick={handleobservability}
+                      onClick={handleObservability}
                     >
                       Open Observability
                     </Button>
