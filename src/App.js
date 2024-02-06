@@ -27,6 +27,10 @@ import AddRules from "./scenes/admin/AddRules";
 import RulesDetails from "./scenes/admin/RulesDetails";
 import CllusterDashboard from "./scenes/admin/CllusterDashboard";
 import AdminTopBar from "./scenes/admin/AdminTopbar";
+import PodCpuMetric from "./scenes/Infra/PodCpuMetric";
+import { PodMemoryMetric } from "./scenes/Infra/PodMemoryMetric";
+import NodeCpuMetric from "./scenes/Infra/NodeCpuMetric";
+import NodeMemoryMetric from "./scenes/Infra/NodeMemoryMetric";
 // import { useTokenExpirationCheck } from "./global/TokenExpiry";
 
 function App() {
@@ -107,6 +111,27 @@ function App() {
     );
   };
 
+  const InfrastructurePodDetailsSection = () => {
+    return (
+      <Routes>
+        <Route index element={<PodCpuMetric/>} />
+        <Route path="podMemory" element={<PodMemoryMetric />} />
+      
+      </Routes>
+    );
+  };
+
+
+  const InfrastructureNodeDetailsSection = () => {
+    return (
+      <Routes>
+         <Route index element={<NodeCpuMetric />} />
+        <Route path="nodeMemory" element={<NodeMemoryMetric />} />
+      </Routes>
+    );
+  };
+
+
   const AdminSection = () => {
     return (
       <div>
@@ -133,11 +158,10 @@ function App() {
           <DashboardTopBar />
           <Routes>
             <Route path="dashboard/*" element={<DashboardSection />} />
-            <Route
-              path="sustainability/*"
-              element={<SustainabilitySection />}
-            />
+            <Route path="sustainability/*" element={<SustainabilitySection />}/>
             <Route path="apm/*" element={<ApmSection />} />
+            <Route path="infraPod/*" element={<InfrastructurePodDetailsSection />} />
+            <Route path="infraNode/*" element={<InfrastructureNodeDetailsSection />} />
           </Routes>
         </main>
       </div>

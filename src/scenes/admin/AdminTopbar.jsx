@@ -1,15 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AppBar, Toolbar, Typography, Box } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, Button,IconButton } from "@mui/material";
 import logo from "../../assets/zaga-logedit.jpg";
-
+import { Navigate, useNavigate } from "react-router-dom";
+import HomeIcon from '@mui/icons-material/Home';
 const AdminTopbar = () => {
+  const navigate = useNavigate();
+  const handleHomepage = () => {
+    navigate("/");
+  };
+
   return (
     <div>
       <AppBar position="static">
         <Toolbar
           sx={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "space-between",
             alignItems: "center",
             minHeight: "50px",
 
@@ -39,7 +45,16 @@ const AdminTopbar = () => {
             >
               Cluster Management
             </Typography>
+            
           </Box>
+     
+          <div style={{ marginLeft: "5px",marginTop:"5px" }}>
+                <span style={{color:"white"}}>Home</span>
+                <IconButton aria-label="Account" onClick={handleHomepage}>
+                <HomeIcon style={{ fontSize: "20px", color: "#FFF",marginBottom:"5px" }} />
+              </IconButton>
+            </div>
+            
         </Toolbar>
       </AppBar>
     </div>
