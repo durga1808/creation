@@ -39,22 +39,22 @@ const LandingPage = () => {
   // Memoize the function to prevent unnecessary re-renders
   const memoizedCheckTokenExpiration = useMemo(() => checkTokenExpiration, []);
 
-  useEffect(() => {
-    const userDetails = localStorage.getItem("userInfo");
-    // checkTokenExpiration();
-    memoizedCheckTokenExpiration();
-
-    if (userDetails) {
-      const user = JSON.parse(userDetails);
-      const checkRole = user.roles;
-      setAuthenticated(!!checkRole);
-      setUserRole(user.roles);
-    }
-  }, [memoizedCheckTokenExpiration]);
-
-  const handlelogin = () => {
-    navigate("/login");
-  };
+    useEffect(() => {
+      const userDetails = localStorage.getItem("userInfo");
+      // checkTokenExpiration();
+      memoizedCheckTokenExpiration();
+  
+      if (userDetails) {
+        const user = JSON.parse(userDetails);
+        const checkRole = user.roles;
+        setAuthenticated(!!checkRole);
+        setUserRole(user.roles)
+      }
+    }, [memoizedCheckTokenExpiration]);
+  
+    const handleLogin = () => {
+      navigate("/login");
+    };
 
   const handleLogout = async () => {
     // Check if the token is expired
@@ -91,49 +91,55 @@ const LandingPage = () => {
     setAuthenticated(false);
   };
 
-  const handleobservability = () => {
-    if (authenticated) {
-      navigate("/mainpage/dashboard");
-    } else if (authenticated && !userRole.includes("admin")) {
-      navigate("/notAuth");
-    } else {
-      navigate("/login");
-    }
-  };
-
-  const handleInfra = () => {
-    if (authenticated) {
-      navigate("/mainpage/infraPod");
-    } else if (authenticated && !userRole.includes("admin")) {
-      navigate("/notAuth");
-    } else {
-      navigate("/login");
-    }
-  };
-
-  const handleSustainability = () => {
-    if (authenticated) {
-      navigate("/mainpage/sustainability");
-    } else if (authenticated && !userRole.includes("admin")) {
-      navigate("/notAuth");
-    } else {
-      navigate("/login");
-    }
-  };
-
-  const handleAdminPage = () => {
-    // navigate(authenticated ? "/admin" : "/notAuth");
-    if (authenticated) {
-      // If the user is authenticated
-      if (userRole.includes("admin")) {
-        navigate("/admin/adminMainpage");
+    const handleObservability = () => {
+      if (authenticated) {
+        if ((userRole.includes("admin") || userRole.includes("vendor") || userRole.includes("apm"))) {
+          navigate("/mainpage/dashboard");
+        } else {
+          navigate("/notAuth");
+        }
       } else {
-        navigate("/notAuth");
+        navigate("/login");
       }
-    } else {
-      navigate("/login");
     }
-  };
+
+    const handleInfra = () => {
+      if (authenticated) {
+        if ((userRole.includes("admin") || userRole.includes("vendor") || userRole.includes("infra"))) {
+          navigate("/mainpage/infraPod");
+        } else {
+          navigate("/notAuth");
+        }
+      } else {
+        navigate("/login");
+      }
+    }
+
+    const handleSustainability = () => {
+      if (authenticated) {
+        if ((userRole.includes("admin") || userRole.includes("vendor") || userRole.includes("sustainability"))) {
+          navigate("/mainpage/sustainability");
+        } else {
+          navigate("/notAuth");
+        }
+      } else {
+        navigate("/login");
+      }
+    }  
+
+    const handleAdminPage = () => {
+      // navigate(authenticated ? "/admin" : "/notAuth");
+      if (authenticated) {
+        // If the user is authenticated
+        if (userRole.includes("admin") ) {
+          navigate("/admin/adminMainpage");
+        } else {
+          navigate("/notAuth");
+        }
+      } else {
+        navigate("/login");
+      }
+    }
 
   return (
     <div className="container">
@@ -261,7 +267,7 @@ const LandingPage = () => {
                     <Button
                       size="small"
                       color="info"
-                      onClick={handleobservability}
+                      onClick={handleObservability}
                     >
                       Open Observability
                     </Button>

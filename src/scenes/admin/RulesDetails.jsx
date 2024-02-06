@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
-  Box,
-  Collapse,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -10,391 +7,22 @@ import {
   TableHead,
   TableRow,
   Typography,
-  TextField,
   Paper,
   Button,
-  Grid,
-  styled,
 } from "@mui/material";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { getAllRules, updateServiceList } from "../../api/LoginApiService";
+import { getAllRules } from "../../api/LoginApiService";
 import { useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../global/Loading/Loading";
 import { GlobalContext } from "../../global/globalContext/GlobalContext";
+import RuleDetailsPopup from "./RulesDetailsPopup";
 
 function createData(serviceName, rules) {
   return {
     serviceName,
     rules,
   };
-}
-
-function Row({ row }) {
-  const [open, setOpen] = useState(false);
-  const [editable, setEditable] = useState(false);
-  const [editedRules, setEditedRules] = useState(row.rules);
-  const [errorMessage, setErrorMessage] = useState("")
-
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-
-  const StyledTableCell = styled(TableCell)(() => ({
-    borderBottom: "none",
-  }));
-
-  const handleEdit = () => {
-    setEditable(true);
-    // setOpen(!open);
-  };
-
-  // const handleInputChange = (index, property, value) => {
-  //   const updatedRules = [...editedRules];
-  //   if (property === "severityText") {
-  //     updatedRules[index] = {
-  //       ...updatedRules[index],
-  //       [property]: [value],
-  //     };
-  //   } else {
-  //     updatedRules[index] = { ...updatedRules[index], [property]: value };
-  //   }
-  //   setEditedRules(updatedRules);
-  //   setEditable(true);
-  // };
-
-  const handleInputChange = (index, property, value) => {
-    const updatedRules = [...editedRules];
-  
-    if (property === "severityText") {
-      const severityArray = value.split(',').map(item => item.trim().toUpperCase());
-      const filteredSeverityArray = severityArray.filter(item => item !== "");
-
-      updatedRules[index] = {
-        ...updatedRules[index],
-        [property]: filteredSeverityArray,
-      };
-    } else {
-      updatedRules[index] = { ...updatedRules[index], [property]: value };
-    }
-  
-    setEditedRules(updatedRules);
-    setEditable(true);
-  };  
-
-  const handleUpdate = async () => {
-    try {
-      const updatedServiceRules = {
-        serviceName: row.serviceName,
-        rules: editedRules,
-      };
-      const response = await updateServiceList(updatedServiceRules);
-      console.log("Updated Rules:", editedRules);
-
-      console.log("Request Payload:", updatedServiceRules);
-      console.log("Server Response:", response);
-
-      console.log("Rules updated successfully", response);
-      setEditable(false);
-    } catch (error) {
-      console.error("Error updating rules:", error);
-      setErrorMessage("Error Updating Rules")
-    }
-  };
-
-  return (
-    <>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
-          <Typography variant="h6">{row.serviceName}</Typography>
-        </TableCell>
-
-        <TableCell>
-          {editable ? (
-            <>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleUpdate}
-              >
-                Save
-              </Button>
-            </>
-          ) : (
-            <Button variant="contained" color="primary" onClick={handleEdit}>
-              Edit
-            </Button>
-          )}
-        </TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h4">Rules</Typography>
-
-              {editedRules && editedRules.length > 0 ? (
-                <Grid container spacing={2}>
-                  {editedRules.map((rule, index) => (
-                    <Grid item key={index} xs={12} md={6} lg={4}>
-                      {/* <div key={index}> */}
-                      <br />
-                      <>
-                        <TableRow>
-                          <StyledTableCell>Rule Type:</StyledTableCell>
-                          <StyledTableCell>{rule.ruleType}</StyledTableCell>
-                        </TableRow>
-
-                        <TableRow>
-                          <StyledTableCell>Start Date:</StyledTableCell>
-                          {editable ? (
-                            <TextField
-                              sx={{ padding: "10px" }}
-                              value={rule.startDateTime}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  index,
-                                  "startDateTime",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          ) : (
-                            <StyledTableCell>
-                              {rule.startDateTime}
-                            </StyledTableCell>
-                          )}
-                        </TableRow>
-
-                        <TableRow>
-                          <StyledTableCell>Expiry Date:</StyledTableCell>
-                          {editable ? (
-                            <TextField
-                              sx={{ padding: "10px" }}
-                              value={rule.expiryDateTime}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  index,
-                                  "expiryDateTime",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          ) : (
-                            <StyledTableCell>
-                              {rule.expiryDateTime}
-                            </StyledTableCell>
-                          )}
-                        </TableRow>
-                      </>
-
-                      {rule.ruleType === "trace" && (
-                        <>
-                          <TableRow>
-                            <StyledTableCell>Duration:</StyledTableCell>
-                            {editable ? (
-                              <TextField
-                                sx={{ padding: "10px" }}
-                                value={rule.duration}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "duration",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            ) : (
-                              <StyledTableCell>{rule.duration}</StyledTableCell>
-                            )}
-                          </TableRow>
-
-                          <TableRow>
-                            <StyledTableCell>
-                              Duration Constraint:
-                            </StyledTableCell>
-                            {editable ? (
-                              <TextField
-                                sx={{ padding: "10px" }}
-                                value={rule.durationConstraint}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "durationConstraint",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            ) : (
-                              <StyledTableCell>
-                                {rule.durationConstraint}{" "}
-                              </StyledTableCell>
-                            )}
-                          </TableRow>
-                        </>
-                      )}
-
-                      {rule.ruleType === "metric" && (
-                        <>
-                          <TableRow>
-                            <StyledTableCell>Memory Limit:</StyledTableCell>
-                            {editable ? (
-                              <TextField
-                                sx={{ padding: "10px" }}
-                                value={rule.memoryLimit}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "memoryLimit",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            ) : (
-                              <StyledTableCell>
-                                {rule.memoryLimit}
-                              </StyledTableCell>
-                            )}
-                          </TableRow>
-
-                          <TableRow>
-                            <StyledTableCell>
-                              Memory Constraint:
-                            </StyledTableCell>
-                            {editable ? (
-                              <TextField
-                                sx={{ padding: "10px" }}
-                                value={rule.memoryConstraint}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "memoryConstraint",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            ) : (
-                              <StyledTableCell>
-                                {rule.memoryConstraint}
-                              </StyledTableCell>
-                            )}
-                          </TableRow>
-
-                          <TableRow>
-                            <StyledTableCell>CPU Limit:</StyledTableCell>
-                            {editable ? (
-                              <TextField
-                                sx={{ padding: "10px" }}
-                                value={rule.cpuLimit}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "cpuLimit",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            ) : (
-                              <StyledTableCell>{rule.cpuLimit}</StyledTableCell>
-                            )}
-                          </TableRow>
-
-                          <TableRow>
-                            <StyledTableCell>CPU Constraint:</StyledTableCell>
-                            {editable ? (
-                              <TextField
-                                sx={{ padding: "10px" }}
-                                value={rule.cpuConstraint}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "cpuConstraint",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            ) : (
-                              <StyledTableCell>
-                                {rule.cpuConstraint}
-                              </StyledTableCell>
-                            )}
-                          </TableRow>
-                        </>
-                      )}
-
-                      {rule.ruleType === "log" && (
-                        <>
-                          <TableRow>
-                            <StyledTableCell>Severity Text:</StyledTableCell>
-                            {editable ? (
-                              <TextField
-                                sx={{ padding: "10px" }}
-                                value={rule.severityText.join(', ')}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "severityText",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            ) : (
-                              <StyledTableCell>
-                                {/* {rule.severityText} */}
-                                {rule.severityText.join(', ')}
-                              </StyledTableCell>
-                            )}
-                          </TableRow>
-
-                          <TableRow>
-                            <StyledTableCell>
-                              Severity Constraint:
-                            </StyledTableCell>
-                            {/* {rule.severityConstraint} */}
-                            {editable ? (
-                              <TextField
-                                sx={{ padding: "10px" }}
-                                value={rule.severityConstraint}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "severityConstraint",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            ) : (
-                              <StyledTableCell>
-                                {rule.severityConstraint}
-                              </StyledTableCell>
-                            )}
-                          </TableRow>
-                        </>
-                      )}
-                    </Grid>
-                  ))}
-                </Grid>
-              ) : (
-                <Typography variant="h6">
-                  No rules available for this service.
-                </Typography>
-              )}
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
-  );
 }
 
 const rows = [
@@ -443,12 +71,17 @@ const rows = [
   ]),
 ];
 
-const RulesDetails = () => {
+const RulesDetails = ({ row}) => {
   const navigate = useNavigate();
   const { serviceListData, setServiceListData } = useContext(GlobalContext)
   const [rows, setRows] = useState([]);
+  const [selectedService, setSelectedService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("")
+  const [selectedRule, setSelectedRule] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  console.log("rules----------", rows)
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const payload = {
@@ -480,6 +113,11 @@ const RulesDetails = () => {
 
   const handleAddRules = () => {
     navigate("/admin/addRules");
+  };
+
+  const handleOpenPopup = (rule) => {
+    setSelectedRule(rule);
+    setOpen(true);
   };
 
   return (
@@ -520,13 +158,21 @@ const RulesDetails = () => {
             </Button>
           </div>
 
-          <TableContainer component={Paper} sx={{marginTop:"10px"}}>
-            <Table aria-label="collapsible table">
+          <TableContainer component={Paper} sx={{ maxHeight: "500px", marginTop:"10px", overflowY: "auto" }}>
+            <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ color: "white", backgroundColor: "#00888C" }} />
+                  <TableCell sx={{ color: "white", backgroundColor: "#00888C" }}>
+                    Rule Type
+                  </TableCell>
                   <TableCell sx={{ color: "white", backgroundColor: "#00888C" }}>
                     Service Name
+                  </TableCell>
+                  <TableCell sx={{ color: "white", backgroundColor: "#00888C" }}>
+                    Start Date
+                  </TableCell>
+                  <TableCell sx={{ color: "white", backgroundColor: "#00888C" }}>
+                    Expiry Date
                   </TableCell>
                   <TableCell sx={{ color: "white", backgroundColor: "#00888C" }}>
                     Action
@@ -534,10 +180,34 @@ const RulesDetails = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <Row key={row.serviceName} row={row} />
-                ))}
+                {rows.map((row) =>
+                  row.rules && row.rules.map((rule, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{rule.ruleType}</TableCell>
+                      <TableCell>{row.serviceName}</TableCell>
+                      <TableCell>{rule.startDateTime}</TableCell>
+                      <TableCell>{rule.expiryDateTime}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleOpenPopup(rule)}
+                        >
+                          Open
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+                      {selectedRule && (
+                        <RuleDetailsPopup rule={selectedRule} 
+                        // serviceName={row.serviceName}
+                            serviceName={rows.find(row => row.rules && row.rules.some(r => r === selectedRule))?.serviceName || '-'} 
+
+                         handleOpenPopup={handleOpenPopup} />
+                      )}
               </TableBody>
+
             </Table>
           </TableContainer>
         </>
