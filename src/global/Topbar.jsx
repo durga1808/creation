@@ -344,10 +344,12 @@ function Topbar() {
                                   backgroundColor: "white",
                                   // color:"black"
                                   color: data.alertData.includes(
-                                    "Critical Alert"
+                                    "CRITICAL"
                                   )
                                     ? "red"
-                                    : "black",
+                                    :data.alertData.includes(
+                                      "WARNING"
+                                    )? "yellow":"black",
                                 }}
                               >
                                 {data.alertData}
