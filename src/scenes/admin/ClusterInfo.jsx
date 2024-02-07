@@ -287,8 +287,8 @@ const ClusterInfo = () => {
                             {item.instrumented === "true" ? (
                               <Button
                                 sx={{
-                                  backgroundColor: "green",
-                                  "&:hover": { backgroundColor: "green" },
+                                  backgroundColor: "red",
+                                  "&:hover": { backgroundColor: "red" },
                                 }}
                                 onClick={() =>
                                   handleUnInstrument(
@@ -297,13 +297,13 @@ const ClusterInfo = () => {
                                   )
                                 }
                               >
-                                Instrumented
+                                UnInstrument
                               </Button>
                             ) : (
                               <Button
                                 sx={{
-                                  backgroundColor: "red",
-                                  "&:hover": { backgroundColor: "red" },
+                                  backgroundColor: "green",
+                                  "&:hover": { backgroundColor: "green" },
                                 }}
                                 onClick={() =>
                                   handleInstrument(
@@ -312,7 +312,7 @@ const ClusterInfo = () => {
                                   )
                                 }
                               >
-                                Uninstrumented
+                                Instrument
                               </Button>
                             )}
                           </TableCell>

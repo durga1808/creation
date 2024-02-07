@@ -8,13 +8,18 @@ import {
   IconButton,
 } from "@mui/material";
 import logo from "../../assets/zaga-logedit.jpg";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 const AdminTopbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const handleHomepage = () => {
     navigate("/");
   };
+
+  const handleClusterRoute = () => {
+    navigate("/admin/adminMainpage")
+  }
 
   return (
     <div>
@@ -72,7 +77,18 @@ const AdminTopbar = () => {
           </Box>
 
           <div style={{ marginLeft: "5px", marginTop: "5px" }}>
-            <span style={{ color: "white" }}>Home</span>
+          {((location.pathname === "/admin/clusterDashboard" || "/admin/clusterDashboard/rulesInfo") && location.pathname !== "/admin/adminMainpage") && (
+              <>
+                <span style={{ color: "white" }}>Home</span>
+                <IconButton aria-label="Account" onClick={handleClusterRoute}>
+                  <HomeIcon
+                    style={{ fontSize: "20px", color: "#FFF", marginBottom: "5px" }}
+                  />
+                </IconButton>
+              </>
+            )}
+
+            <span style={{ color: "white" }}>Portal</span>
             <IconButton aria-label="Account" onClick={handleHomepage}>
               <HomeIcon
                 style={{ fontSize: "20px", color: "#FFF", marginBottom: "5px" }}

@@ -585,7 +585,7 @@ function Topbar() {
               </>
             </Popover> */}
             <div style={{ marginLeft: "5px",marginTop:"5px" }}>
-                <span style={{color:"white"}}>Home</span>
+                <span style={{color:"white"}}>Portal</span>
                 <IconButton aria-label="Account" onClick={handleHomepage}>
                 <HomeIcon style={{ fontSize: "20px", color: "#FFF",marginBottom:"5px" }} />
               </IconButton>
